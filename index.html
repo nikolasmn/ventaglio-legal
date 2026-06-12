@@ -1,0 +1,3131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ventaglio — Beach Tennis Metrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────
+   RESET & TOKENS
+───────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sand-50:  #fdf8f0;
+  --sand-100: #f5ead6;
+  --sand-200: #e8d5b0;
+  --sand-300: #d4b98a;
+  --sand-400: #b89660;
+  --sand-500: #9a7840;
+  --sand-600: #7a5e2e;
+  --sand-700: #5c4420;
+  --sand-800: #3d2d14;
+  --sand-900: #1e1608;
+  --ocean:    #2a4a5e;
+  --ocean-light: #3d6b82;
+  --text-primary: #1e1608;
+  --text-secondary: #7a5e2e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--sand-50);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────
+   NAVIGATION
+───────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 4rem;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+
+nav.scrolled {
+  background: rgba(253,248,240,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 var(--sand-200);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--sand-400); }
+
+nav ul {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+nav ul a {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand-600);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+nav ul a:hover { color: var(--text-primary); }
+
+.nav-cta {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand-50) !important;
+  background: var(--sand-800);
+  padding: 0.6rem 1.5rem;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--ocean) !important; transform: translateY(-1px); }
+
+/* ─────────────────────────────────
+   HERO
+───────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 9rem 4rem 5rem;
+  gap: 3rem;
+  overflow: hidden;
+}
+
+/* Layered background */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 75% 45%, rgba(212,185,138,0.2) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 45% at 5% 90%, rgba(42,74,94,0.07) 0%, transparent 55%);
+  z-index: 0;
+}
+
+/* Large decorative ring */
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -8%;
+  top: 8%;
+  width: 72vh;
+  height: 72vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.18);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: slideUp 0.9s 0.2s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: var(--sand-400);
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.8rem, 6.5vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: 1.75rem;
+  opacity: 0;
+  animation: slideUp 0.9s 0.35s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--sand-500);
+}
+
+.hero-sub {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+  max-width: 40ch;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: slideUp 0.9s 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  opacity: 0;
+  animation: slideUp 0.9s 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--text-primary);
+  color: var(--sand-50);
+  padding: 1rem 2.2rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.3s, transform 0.25s;
+}
+.btn-primary:hover { background: var(--ocean); transform: translateY(-2px); }
+
+.btn-secondary {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sand-600);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.25s, gap 0.25s;
+}
+.btn-secondary:hover { color: var(--text-primary); gap: 0.8rem; }
+
+/* ─────────────────────────────────
+   HERO VISUAL — iPhone + Watch
+───────────────────────────────── */
+.hero-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: fadeIn 1.4s 0.5s ease forwards;
+}
+
+.devices-wrapper {
+  position: relative;
+  width: 340px;
+  height: 500px;
+}
+
+/* iPhone */
+.iphone {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 200px;
+  height: 420px;
+  background: linear-gradient(150deg, #1c1c1e 0%, #2c2c2e 100%);
+  border-radius: 44px;
+  box-shadow:
+    0 50px 100px rgba(30,22,8,0.4),
+    0 2px 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 rgba(0,0,0,0.4) inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iphone::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 41px;
+  background: linear-gradient(160deg, #111 0%, #1a1a1a 100%);
+}
+
+/* Dynamic island */
+.iphone-island {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 26px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 3;
+}
+
+.iphone-screen {
+  position: relative;
+  z-index: 2;
+  width: 176px;
+  height: 380px;
+  border-radius: 38px;
+  background: linear-gradient(170deg, #0d1117 0%, #111620 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 1rem 1.2rem;
+  gap: 0.7rem;
+}
+
+.is-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 0.3rem;
+}
+
+.is-app-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  letter-spacing: 0.08em;
+}
+
+.is-date {
+  font-size: 0.42rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.5);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.is-big-metric {
+  background: rgba(184,150,96,0.07);
+  border: 1px solid rgba(184,150,96,0.12);
+  border-radius: 14px;
+  padding: 1rem 1rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.is-bm-label {
+  font-size: 0.42rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.55);
+}
+
+.is-bm-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.is-bm-unit {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--sand-400);
+}
+
+.is-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.is-tile {
+  background: rgba(184,150,96,0.06);
+  border: 1px solid rgba(184,150,96,0.1);
+  border-radius: 12px;
+  padding: 0.75rem 0.7rem;
+}
+
+.is-tile-label {
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.45);
+  margin-bottom: 0.3rem;
+}
+
+.is-tile-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  line-height: 1;
+}
+
+.is-tile-sub {
+  font-size: 0.38rem;
+  letter-spacing: 0.12em;
+  color: rgba(184,150,96,0.4);
+  margin-top: 0.15rem;
+}
+
+/* Progress ring tile */
+.is-ring-tile {
+  background: rgba(42,74,94,0.2);
+  border: 1px solid rgba(42,74,94,0.35);
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  grid-column: 1 / -1;
+}
+
+.is-ring-tile svg {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.is-ring-tile-text {
+  flex: 1;
+}
+
+.is-ring-label {
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.5);
+  margin-bottom: 0.2rem;
+}
+
+.is-ring-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--sand-200);
+}
+
+/* Apple Watch */
+.watch {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  width: 130px;
+  height: 158px;
+  background: linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-radius: 36px;
+  box-shadow:
+    0 24px 60px rgba(30,22,8,0.45),
+    0 2px 0 rgba(255,255,255,0.07) inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.watch::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 34px;
+  background: linear-gradient(150deg, #0f0f0f 0%, #1a1a1a 100%);
+}
+
+/* Watch crown */
+.watch::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 30px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #181818 100%);
+  border-radius: 0 3px 3px 0;
+}
+
+.watch-screen {
+  position: relative;
+  z-index: 1;
+  width: 110px;
+  height: 136px;
+  border-radius: 30px;
+  background: linear-gradient(155deg, #0a0e14 0%, #0d1117 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0.75rem 0.7rem;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+
+.ws-app {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(184,150,96,0.55);
+}
+
+.ws-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.ws-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(184,150,96,0.12);
+}
+
+.ws-metrics-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+}
+
+.ws-metric-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.ws-mini-label {
+  font-size: 0.32rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.4);
+}
+
+.ws-mini-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--sand-300);
+  line-height: 1;
+}
+
+.ws-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.1rem;
+}
+
+.ws-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ws-bar-label {
+  font-size: 0.3rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.4);
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.ws-bar-track {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.ws-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--sand-500), var(--sand-300));
+  border-radius: 1px;
+}
+
+/* Floating chips */
+.hero-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(253,248,240,0.95);
+  border: 1px solid var(--sand-200);
+  border-radius: 100px;
+  padding: 0.55rem 1rem 0.55rem 0.65rem;
+  box-shadow: 0 8px 24px rgba(30,22,8,0.1), 0 1px 0 rgba(255,255,255,0.9) inset;
+  white-space: nowrap;
+}
+
+.chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4caf7d;
+  box-shadow: 0 0 6px #4caf7d80;
+  flex-shrink: 0;
+}
+
+.chip-text {
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--sand-700);
+}
+
+.chip-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.hero-chip:nth-child(1) {
+  top: 30px;
+  left: -20px;
+  animation: chipFloat 7s ease-in-out infinite;
+}
+.hero-chip:nth-child(2) {
+  bottom: 60px;
+  right: -10px;
+  animation: chipFloat 7s ease-in-out 2s infinite;
+}
+.hero-chip:nth-child(3) {
+  top: 50%;
+  left: -30px;
+  transform: translateY(-50%);
+  animation: chipFloat 7s ease-in-out 4s infinite;
+}
+
+/* Watch strap */
+.watch-strap-top, .watch-strap-bottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 62px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+  border-radius: 3px;
+}
+.watch-strap-top  { top: -36px;    height: 40px; }
+.watch-strap-bottom { bottom: -36px; height: 40px; }
+
+/* ─────────────────────────────────
+   TRUST BAR
+───────────────────────────────── */
+.trust-bar {
+  position: relative;
+  z-index: 1;
+  background: var(--sand-900);
+  padding: 3.5rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.trust-item {
+  padding: 0 2rem;
+  border-left: 1px solid rgba(184,150,96,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.trust-item:first-child { border-left: none; padding-left: 0; }
+
+.trust-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.2rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.trust-num sup {
+  font-size: 1.2rem;
+  vertical-align: super;
+  color: var(--sand-400);
+}
+
+.trust-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────
+   SECTION SHARED
+───────────────────────────────── */
+.section-eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sand-400);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--sand-300);
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 4vw, 4.2rem);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--text-primary);
+}
+.section-title em { font-style: italic; color: var(--sand-500); }
+
+/* ─────────────────────────────────
+   HOW IT WORKS
+───────────────────────────────── */
+.how-it-works {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-50);
+  overflow: hidden;
+}
+
+/* Faint ring decoration */
+.how-it-works::before {
+  content: '';
+  position: absolute;
+  left: -15%;
+  bottom: -20%;
+  width: 60vh;
+  height: 60vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.1);
+  pointer-events: none;
+}
+
+.hiw-header {
+  text-align: center;
+  margin-bottom: 6rem;
+}
+
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+/* Connecting line */
+.hiw-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(16.66% + 1rem);
+  right: calc(16.66% + 1rem);
+  height: 1px;
+  background: linear-gradient(to right,
+    var(--sand-300) 0%,
+    var(--sand-300) 33%,
+    var(--sand-200) 33%,
+    var(--sand-200) 66%,
+    var(--sand-300) 66%
+  );
+  z-index: 0;
+}
+
+.hiw-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hiw-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--sand-50);
+  border: 1px solid var(--sand-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--sand-500);
+  transition: background 0.35s, border-color 0.35s;
+}
+
+.hiw-step:hover .hiw-num {
+  background: var(--sand-100);
+  border-color: var(--sand-400);
+}
+
+.hiw-step-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.hiw-step-desc {
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+  max-width: 24ch;
+}
+
+/* ─────────────────────────────────
+   FEATURES
+───────────────────────────────── */
+.features {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-100);
+}
+
+.features-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: end;
+  margin-bottom: 5rem;
+}
+
+.features-header-note {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+  padding-bottom: 0.3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--sand-200);
+  border: 1px solid var(--sand-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.feature-card {
+  background: var(--sand-100);
+  padding: 2.8rem 2.5rem;
+  transition: background 0.35s;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.feature-card:hover { background: var(--sand-50); }
+
+.feature-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--sand-300);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.35s, background 0.35s;
+}
+.feature-card:hover .feature-icon-wrap {
+  border-color: var(--sand-400);
+  background: var(--sand-200);
+}
+
+.feature-icon-wrap svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--sand-500);
+  stroke-width: 1.5;
+  fill: none;
+  transition: stroke 0.35s;
+}
+.feature-card:hover .feature-icon-wrap svg { stroke: var(--sand-700); }
+
+.feature-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.feature-desc {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+}
+
+/* ─────────────────────────────────
+   SCREENSHOTS
+───────────────────────────────── */
+.screenshots {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-900);
+  overflow: hidden;
+}
+
+.screenshots::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vh;
+  height: 80vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.06);
+  pointer-events: none;
+}
+.screenshots::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vh;
+  height: 50vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.04);
+  pointer-events: none;
+}
+
+.ss-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ss-header .section-eyebrow {
+  justify-content: center;
+  color: var(--sand-500);
+}
+.ss-header .section-eyebrow::before { background: var(--sand-700); }
+
+.ss-header .section-title { color: var(--sand-50); }
+
+.ss-header p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-500);
+  max-width: 48ch;
+  margin: 1.2rem auto 0;
+}
+
+/* Screenshot tabs */
+.ss-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(184,150,96,0.15);
+  border-radius: 3px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ss-tab {
+  padding: 0.65rem 1.8rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-family: 'Jost', sans-serif;
+  transition: background 0.25s, color 0.25s;
+  border-right: 1px solid rgba(184,150,96,0.15);
+}
+.ss-tab:last-child { border-right: none; }
+.ss-tab.active {
+  background: rgba(184,150,96,0.12);
+  color: var(--sand-200);
+}
+.ss-tab:hover:not(.active) { color: var(--sand-300); }
+
+/* Screenshots display */
+.ss-display {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+
+.ss-phone {
+  width: 200px;
+  flex-shrink: 0;
+  transform: scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+  opacity: 0.7;
+}
+.ss-phone.active-phone {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+.ss-phone-body {
+  width: 200px;
+  height: 420px;
+  background: linear-gradient(150deg, #1c1c1e 0%, #2c2c2e 100%);
+  border-radius: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.ss-phone-body::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 42px;
+  background: #111;
+}
+
+.ss-island {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 24px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 3;
+}
+
+.ss-phone-screen {
+  position: relative;
+  z-index: 2;
+  width: 176px;
+  height: 382px;
+  border-radius: 38px;
+  overflow: hidden;
+}
+
+/* Screen 1 — Dashboard */
+.screen-dashboard {
+  background: linear-gradient(170deg, #0d1117 0%, #111620 100%);
+  padding: 3rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  height: 100%;
+}
+
+.sd-greeting {
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.45);
+  padding: 0 0.3rem;
+}
+
+.sd-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  padding: 0 0.3rem;
+  line-height: 1.2;
+}
+
+.sd-hero-card {
+  background: linear-gradient(135deg, rgba(42,74,94,0.5) 0%, rgba(30,22,8,0.3) 100%);
+  border: 1px solid rgba(184,150,96,0.12);
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sd-hero-label {
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.5);
+}
+
+.sd-hero-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+}
+
+.sd-hero-sub {
+  font-size: 0.36rem;
+  color: rgba(184,150,96,0.4);
+  letter-spacing: 0.08em;
+}
+
+.sd-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.sd-mini {
+  background: rgba(184,150,96,0.06);
+  border: 1px solid rgba(184,150,96,0.1);
+  border-radius: 12px;
+  padding: 0.7rem;
+}
+
+.sd-mini-lbl {
+  font-size: 0.35rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.4);
+  margin-bottom: 0.2rem;
+}
+
+.sd-mini-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  line-height: 1;
+}
+
+/* Screen 2 — Histórico */
+.screen-history {
+  background: var(--sand-50);
+  padding: 3rem 0.8rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+}
+
+.sh-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  padding: 0 0.3rem;
+}
+
+.sh-session {
+  background: #fff;
+  border: 1px solid var(--sand-200);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sh-session-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sh-date {
+  font-size: 0.38rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+}
+
+.sh-duration {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.sh-metrics {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.sh-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.sh-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--sand-700);
+}
+
+.sh-unit {
+  font-size: 0.32rem;
+  letter-spacing: 0.12em;
+  color: var(--sand-400);
+  text-transform: uppercase;
+}
+
+/* Screen 3 — Live Session */
+.screen-live {
+  background: linear-gradient(155deg, #0a0e14 0%, #0d1520 100%);
+  padding: 3rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  height: 100%;
+}
+
+.sl-live {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.4rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  align-self: flex-start;
+}
+
+.sl-live::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4caf7d;
+  box-shadow: 0 0 6px #4caf7d;
+}
+
+.sl-bpm {
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sl-bpm-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.sl-bpm-unit {
+  font-size: 0.42rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  margin-top: 0.2rem;
+}
+
+.sl-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(184,150,96,0.1);
+}
+
+.sl-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.sl-item {
+  text-align: center;
+  background: rgba(184,150,96,0.06);
+  border: 1px solid rgba(184,150,96,0.1);
+  border-radius: 10px;
+  padding: 0.5rem 0.3rem;
+}
+
+.sl-item-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  line-height: 1;
+}
+
+.sl-item-lbl {
+  font-size: 0.3rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.4);
+  margin-top: 0.15rem;
+}
+
+.sl-stop-btn {
+  width: 100%;
+  background: rgba(220,50,50,0.12);
+  border: 1px solid rgba(220,50,50,0.2);
+  border-radius: 10px;
+  padding: 0.6rem;
+  text-align: center;
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(220,130,130,0.8);
+}
+
+/* SS caption */
+.ss-caption {
+  text-align: center;
+  margin-top: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ss-caption h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  margin-bottom: 0.6rem;
+  transition: all 0.3s;
+}
+
+.ss-caption p {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--sand-500);
+  max-width: 44ch;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ─────────────────────────────────
+   METRICS SHOWCASE
+───────────────────────────────── */
+.metrics-section {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-50);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7rem;
+  align-items: center;
+  overflow: hidden;
+}
+
+.metrics-section::after {
+  content: '';
+  position: absolute;
+  top: -15%;
+  right: -8%;
+  width: 55vh;
+  height: 55vh;
+  border-radius: 50%;
+  border: 1px solid var(--sand-200);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.ms-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ms-card-large {
+  background: var(--sand-900);
+  border-radius: 20px;
+  padding: 1.8rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ms-card-large .ms-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(184,150,96,0.1);
+  border: 1px solid rgba(184,150,96,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ms-card-large .ms-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--sand-400);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.ms-card-large .ms-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  margin-bottom: 0.3rem;
+}
+
+.ms-card-large .ms-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+}
+
+.ms-card-large .ms-sub {
+  font-size: 0.7rem;
+  color: var(--sand-600);
+  margin-top: 0.2rem;
+}
+
+.ms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.ms-card {
+  background: #fff;
+  border: 1px solid var(--sand-200);
+  border-radius: 16px;
+  padding: 1.4rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.ms-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(30,22,8,0.09);
+}
+
+.ms-card .ms-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: var(--sand-100);
+  border: 1px solid var(--sand-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+}
+
+.ms-card .ms-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--sand-500);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.ms-card .ms-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  margin-bottom: 0.3rem;
+}
+
+.ms-card .ms-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.ms-card .ms-sub {
+  font-size: 0.7rem;
+  color: var(--sand-500);
+  margin-top: 0.2rem;
+}
+
+.ms-content {
+  position: relative;
+  z-index: 1;
+}
+
+.ms-content .section-title { margin-bottom: 1.5rem; }
+
+.ms-content p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--sand-600);
+  margin-bottom: 2.5rem;
+  max-width: 42ch;
+}
+
+/* ─────────────────────────────────
+   WATCH SECTION
+───────────────────────────────── */
+.watch-section {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-800);
+  color: var(--sand-100);
+  overflow: hidden;
+}
+
+.watch-section::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 80vh;
+  height: 80vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.07);
+  pointer-events: none;
+}
+.watch-section::after {
+  content: '';
+  position: absolute;
+  bottom: -25%;
+  left: -5%;
+  width: 50vh;
+  height: 50vh;
+  border-radius: 50%;
+  border: 1px solid rgba(42,74,94,0.2);
+  pointer-events: none;
+}
+
+.ws-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ws-content .section-eyebrow { color: var(--sand-400); }
+.ws-content .section-eyebrow::before { background: var(--sand-600); }
+.ws-content .section-title { color: var(--sand-50); margin-bottom: 1.5rem; }
+
+.ws-content p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--sand-400);
+  margin-bottom: 3rem;
+  max-width: 42ch;
+}
+
+.ws-feat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.ws-feat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ws-feat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(184,150,96,0.08);
+  border: 1px solid rgba(184,150,96,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.ws-feat-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--sand-400);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.ws-feat-text h4 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  margin-bottom: 0.2rem;
+}
+
+.ws-feat-text p {
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--sand-500);
+  margin-bottom: 0;
+  max-width: 100%;
+}
+
+/* Large Watch visual */
+.ws-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.ws-watch-large {
+  width: 200px;
+  height: 244px;
+  background: linear-gradient(145deg, #1a1a1a 0%, #282828 100%);
+  border-radius: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,0.6),
+    0 2px 0 rgba(255,255,255,0.06) inset;
+  position: relative;
+}
+.ws-watch-large::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 51px;
+  background: #111;
+}
+.ws-watch-large::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 46px;
+  background: linear-gradient(180deg, #282828 0%, #1a1a1a 100%);
+  border-radius: 0 4px 4px 0;
+}
+
+.ws-screen-large {
+  position: relative;
+  z-index: 1;
+  width: 170px;
+  height: 210px;
+  border-radius: 46px;
+  background: linear-gradient(155deg, #0a0e14 0%, #0d1520 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem 1rem;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.wsl-live {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.38rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.5);
+}
+.wsl-live::before {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4caf7d;
+  box-shadow: 0 0 5px #4caf7d;
+}
+
+.wsl-app {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: rgba(184,150,96,0.5);
+}
+
+.wsl-bpm {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--sand-100);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.wsl-bpm-label {
+  font-size: 0.38rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sand-500);
+  margin-top: -0.2rem;
+}
+
+.wsl-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(184,150,96,0.1);
+}
+
+.wsl-mini-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.wsl-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.wsl-mini-lbl {
+  font-size: 0.3rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(184,150,96,0.4);
+}
+.wsl-mini-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--sand-300);
+  line-height: 1;
+}
+
+/* Ring chart */
+.wsl-ring {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.2rem;
+}
+
+/* Strap */
+.ws-strap-top, .ws-strap-bottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+  border-radius: 4px;
+}
+.ws-strap-top    { top: -56px;    height: 60px; }
+.ws-strap-bottom { bottom: -56px; height: 60px; }
+
+/* Ambient glow */
+.ws-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(42,74,94,0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────
+   CTA
+───────────────────────────────── */
+.cta-section {
+  position: relative;
+  z-index: 1;
+  padding: 10rem 4rem;
+  background: var(--sand-50);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vh;
+  height: 80vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.1);
+  pointer-events: none;
+}
+
+.cta-section .section-eyebrow { justify-content: center; }
+.cta-section .section-eyebrow::before { background: var(--sand-300); }
+
+.cta-section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.2rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--text-primary);
+  max-width: 20ch;
+  margin-bottom: 1.5rem;
+}
+.cta-section h2 em { font-style: italic; color: var(--sand-500); }
+
+.cta-section > p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+  max-width: 44ch;
+  margin-bottom: 3.5rem;
+}
+
+.cta-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.app-store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: var(--text-primary);
+  color: var(--sand-50);
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.25s;
+}
+.app-store-btn:hover { background: var(--ocean); transform: translateY(-2px); }
+.app-store-btn svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+.app-store-btn-text { text-align: left; line-height: 1; }
+.app-store-btn-text small {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+  margin-bottom: 0.2rem;
+}
+.app-store-btn-text span {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* ─────────────────────────────────
+   PRIVACY TRUST BAND
+───────────────────────────────── */
+.privacy-band {
+  position: relative;
+  z-index: 1;
+  background: var(--sand-100);
+  border-top: 1px solid var(--sand-200);
+  border-bottom: 1px solid var(--sand-200);
+  padding: 3rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.pb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.pb-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: var(--sand-200);
+  border: 1px solid var(--sand-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pb-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--sand-600);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.pb-text strong {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+.pb-text span {
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: var(--sand-600);
+  letter-spacing: 0.02em;
+}
+
+.pb-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--sand-300);
+}
+
+/* ─────────────────────────────────
+   FAQ
+───────────────────────────────── */
+.faq {
+  position: relative;
+  z-index: 1;
+  padding: 9rem 4rem;
+  background: var(--sand-50);
+  overflow: hidden;
+}
+
+.faq::before {
+  content: '';
+  position: absolute;
+  right: -10%;
+  bottom: -15%;
+  width: 55vh;
+  height: 55vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.1);
+  pointer-events: none;
+}
+
+.faq-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  margin-bottom: 5rem;
+}
+
+.faq-header-contact {
+  padding-top: 0.5rem;
+}
+
+.faq-header-contact p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--sand-600);
+  margin-bottom: 1.5rem;
+}
+
+.faq-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sand-700);
+  text-decoration: none;
+  border-bottom: 1px solid var(--sand-300);
+  padding-bottom: 2px;
+  transition: color 0.25s, border-color 0.25s;
+}
+.faq-contact-link:hover { color: var(--ocean); border-color: var(--ocean); }
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--sand-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--sand-200);
+  background: var(--sand-50);
+  transition: background 0.25s;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-item.open { background: #fff; }
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 1.5rem;
+}
+
+.faq-q-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.faq-chevron {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--sand-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.25s, border-color 0.25s, transform 0.3s;
+}
+.faq-chevron svg {
+  width: 12px;
+  height: 12px;
+  stroke: var(--sand-500);
+  fill: none;
+  stroke-width: 2;
+  transition: stroke 0.25s;
+}
+.faq-item.open .faq-chevron {
+  background: var(--sand-800);
+  border-color: var(--sand-800);
+  transform: rotate(180deg);
+}
+.faq-item.open .faq-chevron svg { stroke: var(--sand-200); }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.faq-item.open .faq-answer { max-height: 400px; }
+
+.faq-answer-inner {
+  padding: 0 2rem 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--sand-600);
+}
+
+.faq-answer-inner ol {
+  margin-top: 0.5rem;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+/* ─────────────────────────────────
+   ABOUT BAND
+───────────────────────────────── */
+.about-band {
+  position: relative;
+  z-index: 1;
+  background: var(--sand-900);
+  padding: 5rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  overflow: hidden;
+}
+
+.about-band::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  top: -30%;
+  width: 50vh;
+  height: 50vh;
+  border-radius: 50%;
+  border: 1px solid rgba(184,150,96,0.07);
+  pointer-events: none;
+}
+
+.ab-content .section-eyebrow { color: var(--sand-500); }
+.ab-content .section-eyebrow::before { background: var(--sand-700); }
+
+.ab-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--sand-100);
+  margin-bottom: 1.5rem;
+}
+.ab-title em { font-style: italic; color: var(--sand-400); }
+
+.ab-text {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--sand-500);
+}
+
+.ab-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.ab-stat {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 1.5rem;
+  background: rgba(184,150,96,0.05);
+  border: 1px solid rgba(184,150,96,0.1);
+  border-radius: 12px;
+}
+
+.ab-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(184,150,96,0.08);
+  border: 1px solid rgba(184,150,96,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ab-stat-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--sand-400);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.ab-stat-text strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--sand-200);
+  margin-bottom: 0.1rem;
+}
+.ab-stat-text span {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sand-600);
+}
+
+/* ─────────────────────────────────
+   FOOTER
+───────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  background: var(--sand-900);
+  padding: 3rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(184,150,96,0.1);
+}
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  color: var(--sand-400);
+}
+
+footer nav ul {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+footer nav ul a {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sand-600);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+footer nav ul a:hover { color: var(--sand-300); }
+
+.footer-copy {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--sand-700);
+}
+
+/* ─────────────────────────────────
+   ANIMATIONS
+───────────────────────────────── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes chipFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-9px); }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────
+   RESPONSIVE
+───────────────────────────────── */
+@media (max-width: 960px) {
+  nav { padding: 1.2rem 2rem; }
+  nav ul { display: none; }
+
+  .hero { grid-template-columns: 1fr; padding: 7rem 2rem 4rem; }
+  .hero-visual { display: none; }
+
+  .trust-bar { grid-template-columns: 1fr 1fr; padding: 2.5rem 2rem; }
+
+  .how-it-works,
+  .features,
+  .screenshots,
+  .metrics-section,
+  .watch-section,
+  .cta-section { padding: 5rem 2rem; }
+
+  .hiw-steps { grid-template-columns: 1fr; }
+  .hiw-steps::before { display: none; }
+
+  .features-header { grid-template-columns: 1fr; gap: 1.5rem; }
+  .features-grid { grid-template-columns: 1fr; }
+
+  .ss-display { gap: 1rem; }
+  .ss-phone { transform: scale(0.85); }
+  .ss-phone.active-phone { transform: scale(0.95); }
+
+  .metrics-section { grid-template-columns: 1fr; }
+  .ms-grid { grid-template-columns: 1fr 1fr; }
+
+  .ws-inner { grid-template-columns: 1fr; }
+  .ws-visual { display: none; }
+
+  .cta-section { padding: 6rem 2rem; }
+
+  .privacy-band { padding: 2rem; gap: 1.5rem; flex-direction: column; align-items: flex-start; }
+  .pb-divider { display: none; }
+
+  .faq { padding: 5rem 2rem; }
+  .faq-header { grid-template-columns: 1fr; gap: 2rem; }
+
+  .about-band { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+
+  footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+  }
+  footer nav ul { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Ventag<span>lio</span></a>
+  <ul>
+    <li><a href="#how">Como funciona</a></li>
+    <li><a href="#features">Funcionalidades</a></li>
+    <li><a href="#screenshots">Screenshots</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#download" class="nav-cta">Baixar App</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Beach Tennis · iOS &amp; Apple Watch</p>
+    <h1>Seu jogo,<br>em <em>números.</em></h1>
+    <p class="hero-sub">Métricas de performance em tempo real direto no seu pulso. Frequência cardíaca, calorias, distância — tudo sincronizado com o HealthKit após cada partida.</p>
+    <div class="hero-actions">
+      <a href="#download" class="btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        App Store
+      </a>
+      <a href="#how" class="btn-secondary">
+        Como funciona
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="devices-wrapper">
+
+      <!-- Floating chips -->
+      <div class="hero-chip">
+        <div class="chip-dot"></div>
+        <span class="chip-text">Ao vivo</span>
+        <span class="chip-value">148 bpm</span>
+      </div>
+      <div class="hero-chip">
+        <div class="chip-dot" style="background:#f5a623;box-shadow:0 0 6px #f5a62380;"></div>
+        <span class="chip-text">Calorias</span>
+        <span class="chip-value">312 kcal</span>
+      </div>
+      <div class="hero-chip">
+        <div class="chip-dot" style="background:#4a9eff;box-shadow:0 0 6px #4a9eff80;"></div>
+        <span class="chip-text">Distância</span>
+        <span class="chip-value">2.4 km</span>
+      </div>
+
+      <!-- iPhone -->
+      <div class="iphone">
+        <div class="iphone-island"></div>
+        <div class="iphone-screen">
+          <div class="is-header">
+            <div class="is-app-name">Ventaglio</div>
+            <div class="is-date">12 Jun<br>Hoje</div>
+          </div>
+          <div class="is-big-metric">
+            <div class="is-bm-label">Freq. Cardíaca</div>
+            <div class="is-bm-value">148</div>
+            <div class="is-bm-unit">bpm · ao vivo</div>
+          </div>
+          <div class="is-grid">
+            <div class="is-tile">
+              <div class="is-tile-label">Calorias</div>
+              <div class="is-tile-value">312</div>
+              <div class="is-tile-sub">kcal</div>
+            </div>
+            <div class="is-tile">
+              <div class="is-tile-label">Distância</div>
+              <div class="is-tile-value">2.4</div>
+              <div class="is-tile-sub">km</div>
+            </div>
+            <div class="is-ring-tile">
+              <svg viewBox="0 0 38 38">
+                <circle cx="19" cy="19" r="15" fill="none" stroke="rgba(184,150,96,0.12)" stroke-width="3.5"/>
+                <circle cx="19" cy="19" r="15" fill="none" stroke="#b89660" stroke-width="3.5"
+                  stroke-dasharray="94.2" stroke-dashoffset="23.6" stroke-linecap="round"
+                  transform="rotate(-90 19 19)"/>
+                <text x="19" y="22" text-anchor="middle" fill="#d4b98a" font-size="6" font-family="Cormorant Garamond">75%</text>
+              </svg>
+              <div class="is-ring-tile-text">
+                <div class="is-ring-label">Meta diária</div>
+                <div class="is-ring-val">75% concluído</div>
+              </div>
+            </div>
+            <div class="is-tile">
+              <div class="is-tile-label">Duração</div>
+              <div class="is-tile-value">42:18</div>
+              <div class="is-tile-sub">min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apple Watch -->
+      <div class="watch">
+        <div class="watch-strap-top"></div>
+        <div class="watch-screen">
+          <div class="ws-app">Ventaglio</div>
+          <div class="ws-score">6–4</div>
+          <div class="ws-divider"></div>
+          <div class="ws-metrics-row">
+            <div class="ws-metric-mini">
+              <div class="ws-mini-label">FC</div>
+              <div class="ws-mini-value">148</div>
+            </div>
+            <div class="ws-metric-mini">
+              <div class="ws-mini-label">Cal</div>
+              <div class="ws-mini-value">312</div>
+            </div>
+          </div>
+          <div class="ws-bar-row">
+            <div class="ws-bar-item">
+              <div class="ws-bar-label">Fore</div>
+              <div class="ws-bar-track"><div class="ws-bar-fill" style="width:87%"></div></div>
+            </div>
+            <div class="ws-bar-item">
+              <div class="ws-bar-label">Back</div>
+              <div class="ws-bar-track"><div class="ws-bar-fill" style="width:74%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="watch-strap-bottom"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST BAR ═══ -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <span class="trust-num">6<sup>+</sup></span>
+    <span class="trust-label">Métricas em tempo real</span>
+  </div>
+  <div class="trust-item">
+    <span class="trust-num">∞</span>
+    <span class="trust-label">Histórico de sessões</span>
+  </div>
+  <div class="trust-item">
+    <span class="trust-num">1<sup>s</sup></span>
+    <span class="trust-label">Atualização ao vivo</span>
+  </div>
+  <div class="trust-item">
+    <span class="trust-num">100<sup>%</sup></span>
+    <span class="trust-label">Nativo · watchOS 10</span>
+  </div>
+</div>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how-it-works" id="how">
+  <div class="hiw-header reveal">
+    <div class="section-eyebrow" style="justify-content:center">Como funciona</div>
+    <h2 class="section-title" style="text-align:center;margin:0 auto;">Três passos para <em>começar</em></h2>
+  </div>
+  <div class="hiw-steps">
+    <div class="hiw-step reveal">
+      <div class="hiw-num">1</div>
+      <h3 class="hiw-step-title">Abra no Apple Watch</h3>
+      <p class="hiw-step-desc">Com o Ventaglio instalado, abra o app diretamente no Watch antes de entrar em quadra.</p>
+    </div>
+    <div class="hiw-step reveal" style="transition-delay:0.15s">
+      <div class="hiw-num">2</div>
+      <h3 class="hiw-step-title">Inicie sua sessão</h3>
+      <p class="hiw-step-desc">Toque em Iniciar. O app começa a capturar frequência cardíaca, calorias e distância instantaneamente.</p>
+    </div>
+    <div class="hiw-step reveal" style="transition-delay:0.3s">
+      <div class="hiw-num">3</div>
+      <h3 class="hiw-step-title">Revise no iPhone</h3>
+      <p class="hiw-step-desc">Ao encerrar, todos os dados são sincronizados com o iPhone e salvos no HealthKit automaticamente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="features" id="features">
+  <div class="features-header reveal">
+    <div>
+      <div class="section-eyebrow">Funcionalidades</div>
+      <h2 class="section-title">Tudo que você precisa<br>para <em>evoluir</em></h2>
+    </div>
+    <p class="features-header-note">Cada métrica foi pensada especificamente para o beach tennis — capturada com precisão e entregue em tempo real no seu pulso.</p>
+  </div>
+  <div class="features-grid">
+
+    <div class="feature-card reveal">
+      <div class="feature-icon-wrap">
+        <!-- Heart rate -->
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <h3 class="feature-title">Frequência Cardíaca</h3>
+      <p class="feature-desc">Monitoramento contínuo via HealthKit. Acompanhe sua zona de treino em tempo real e a recuperação entre pontos.</p>
+    </div>
+
+    <div class="feature-card reveal" style="transition-delay:0.1s">
+      <div class="feature-icon-wrap">
+        <!-- Flame / calories -->
+        <svg viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/><path d="M12 2c0 4 3 6 3 10a3 3 0 0 1-6 0c0-4 3-6 3-10z"/></svg>
+      </div>
+      <h3 class="feature-title">Calorias Ativas</h3>
+      <p class="feature-desc">Cálculo preciso de gasto calórico baseado nos seus dados do HealthKit, atualizado a cada segundo de partida.</p>
+    </div>
+
+    <div class="feature-card reveal" style="transition-delay:0.2s">
+      <div class="feature-icon-wrap">
+        <!-- Map pin / distance -->
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3 class="feature-title">Distância</h3>
+      <p class="feature-desc">Saiba exatamente quantos metros você percorre por jogo. Dados filtrados por velocidade para máxima precisão em quadra.</p>
+    </div>
+
+    <div class="feature-card reveal" style="transition-delay:0.3s">
+      <div class="feature-icon-wrap">
+        <!-- Steps / shoe -->
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l1.69-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <h3 class="feature-title">Contagem de Passos</h3>
+      <p class="feature-desc">Coleta dedicada de passos otimizada para a dinâmica única do beach tennis, sincronizada ao HealthKit.</p>
+    </div>
+
+    <div class="feature-card reveal" style="transition-delay:0.4s">
+      <div class="feature-icon-wrap">
+        <!-- Clock -->
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3 class="feature-title">Duração da Sessão</h3>
+      <p class="feature-desc">Tempo total de jogo rastreado automaticamente. Cada sessão salva localmente no dispositivo via SwiftData.</p>
+    </div>
+
+    <div class="feature-card reveal" style="transition-delay:0.5s">
+      <div class="feature-icon-wrap">
+        <!-- Chart / history -->
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3 class="feature-title">Histórico Completo</h3>
+      <p class="feature-desc">Todas as suas sessões organizadas no iPhone. Acompanhe sua evolução ao longo do tempo com dados persistentes.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SCREENSHOTS ═══ -->
+<section class="screenshots" id="screenshots">
+  <div class="ss-header reveal">
+    <div class="section-eyebrow">Screenshots</div>
+    <h2 class="section-title">Desenhado para<br>quem <em>joga de verdade.</em></h2>
+    <p>Interface limpa, dados no centro. Tudo que você precisa saber sobre sua partida em um olhar.</p>
+  </div>
+
+  <div class="ss-tabs reveal">
+    <button class="ss-tab active" data-screen="0">Dashboard</button>
+    <button class="ss-tab" data-screen="1">Histórico</button>
+    <button class="ss-tab" data-screen="2">Sessão ao vivo</button>
+  </div>
+
+  <div class="ss-display reveal">
+
+    <!-- Phone 0: Dashboard -->
+    <div class="ss-phone active-phone" data-index="0">
+      <div class="ss-phone-body">
+        <div class="ss-island"></div>
+        <div class="ss-phone-screen">
+          <div class="screen-dashboard">
+            <div class="sd-greeting">Boa tarde, Nikolas</div>
+            <div class="sd-title">Última<br>sessão</div>
+            <div class="sd-hero-card">
+              <div class="sd-hero-label">Frequência Cardíaca Máx.</div>
+              <div class="sd-hero-value">172</div>
+              <div class="sd-hero-sub">bpm · 12 Jun, 1h08min</div>
+            </div>
+            <div class="sd-mini-grid">
+              <div class="sd-mini">
+                <div class="sd-mini-lbl">Calorias</div>
+                <div class="sd-mini-val">487</div>
+              </div>
+              <div class="sd-mini">
+                <div class="sd-mini-lbl">Distância</div>
+                <div class="sd-mini-val">3.8km</div>
+              </div>
+              <div class="sd-mini">
+                <div class="sd-mini-lbl">Passos</div>
+                <div class="sd-mini-val">5241</div>
+              </div>
+              <div class="sd-mini">
+                <div class="sd-mini-lbl">FC Média</div>
+                <div class="sd-mini-val">141</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 1: History -->
+    <div class="ss-phone" data-index="1" style="opacity:0.5;transform:scale(0.88)">
+      <div class="ss-phone-body">
+        <div class="ss-island"></div>
+        <div class="ss-phone-screen">
+          <div class="screen-history">
+            <div class="sh-title">Histórico</div>
+            <div class="sh-session">
+              <div class="sh-session-top">
+                <div class="sh-date">12 Jun · Qua</div>
+                <div class="sh-duration">1h08</div>
+              </div>
+              <div class="sh-metrics">
+                <div class="sh-metric"><span class="sh-val">487</span><span class="sh-unit">kcal</span></div>
+                <div class="sh-metric"><span class="sh-val">3.8</span><span class="sh-unit">km</span></div>
+                <div class="sh-metric"><span class="sh-val">172</span><span class="sh-unit">bpm máx</span></div>
+              </div>
+            </div>
+            <div class="sh-session">
+              <div class="sh-session-top">
+                <div class="sh-date">10 Jun · Seg</div>
+                <div class="sh-duration">52min</div>
+              </div>
+              <div class="sh-metrics">
+                <div class="sh-metric"><span class="sh-val">362</span><span class="sh-unit">kcal</span></div>
+                <div class="sh-metric"><span class="sh-val">2.9</span><span class="sh-unit">km</span></div>
+                <div class="sh-metric"><span class="sh-val">165</span><span class="sh-unit">bpm máx</span></div>
+              </div>
+            </div>
+            <div class="sh-session">
+              <div class="sh-session-top">
+                <div class="sh-date">7 Jun · Sex</div>
+                <div class="sh-duration">1h24</div>
+              </div>
+              <div class="sh-metrics">
+                <div class="sh-metric"><span class="sh-val">601</span><span class="sh-unit">kcal</span></div>
+                <div class="sh-metric"><span class="sh-val">4.6</span><span class="sh-unit">km</span></div>
+                <div class="sh-metric"><span class="sh-val">179</span><span class="sh-unit">bpm máx</span></div>
+              </div>
+            </div>
+            <div class="sh-session" style="opacity:0.5">
+              <div class="sh-session-top">
+                <div class="sh-date">5 Jun · Qua</div>
+                <div class="sh-duration">48min</div>
+              </div>
+              <div class="sh-metrics">
+                <div class="sh-metric"><span class="sh-val">318</span><span class="sh-unit">kcal</span></div>
+                <div class="sh-metric"><span class="sh-val">2.6</span><span class="sh-unit">km</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Live Session -->
+    <div class="ss-phone" data-index="2" style="opacity:0.5;transform:scale(0.88)">
+      <div class="ss-phone-body">
+        <div class="ss-island"></div>
+        <div class="ss-phone-screen">
+          <div class="screen-live">
+            <div class="sl-live">Ao vivo · 42:18</div>
+            <div class="sl-bpm">
+              <div class="sl-bpm-val">148</div>
+              <div class="sl-bpm-unit">Frequência Cardíaca</div>
+            </div>
+            <div class="sl-divider"></div>
+            <div class="sl-row">
+              <div class="sl-item">
+                <div class="sl-item-val">312</div>
+                <div class="sl-item-lbl">kcal</div>
+              </div>
+              <div class="sl-item">
+                <div class="sl-item-val">2.4km</div>
+                <div class="sl-item-lbl">Distância</div>
+              </div>
+              <div class="sl-item">
+                <div class="sl-item-val">4.2k</div>
+                <div class="sl-item-lbl">Passos</div>
+              </div>
+            </div>
+            <div class="sl-stop-btn">Encerrar sessão</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ss-caption">
+    <h3 id="ss-caption-title">Dashboard</h3>
+    <p id="ss-caption-desc">Visão geral da sua última sessão com todas as métricas em um só lugar. Acompanhe sua evolução ao longo do tempo.</p>
+  </div>
+</section>
+
+<!-- ═══ METRICS SHOWCASE ═══ -->
+<section class="metrics-section">
+  <div class="ms-visual reveal">
+    <div class="ms-card-large">
+      <div class="ms-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div>
+        <div class="ms-label">FC Máxima · sessão anterior</div>
+        <div class="ms-value">172 bpm</div>
+        <div class="ms-sub">Registrado aos 38 min de partida</div>
+      </div>
+    </div>
+    <div class="ms-grid">
+      <div class="ms-card">
+        <div class="ms-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/></svg>
+        </div>
+        <div class="ms-label">Calorias</div>
+        <div class="ms-value">487</div>
+        <div class="ms-sub">kcal em 68 min</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="ms-label">Distância</div>
+        <div class="ms-value">3.8</div>
+        <div class="ms-sub">km percorridos</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="ms-label">Passos</div>
+        <div class="ms-value">5.241</div>
+        <div class="ms-sub">na sessão</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="ms-label">Duração</div>
+        <div class="ms-value">1h08</div>
+        <div class="ms-sub">tempo em quadra</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ms-content reveal" style="transition-delay:0.15s">
+    <div class="section-eyebrow">Dados Inteligentes</div>
+    <h2 class="section-title">Cada número<br>conta uma <em>história</em></h2>
+    <p>O Ventaglio captura e organiza suas métricas em cada partida — do aquecimento ao último ponto. Tudo integrado nativamente ao HealthKit, sem configuração extra.</p>
+    <a href="#download" class="btn-primary" style="display:inline-flex">
+      Começar agora
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ WATCH ═══ -->
+<section class="watch-section" id="watch">
+  <div class="ws-inner">
+    <div class="ws-content reveal">
+      <div class="section-eyebrow">Apple Watch</div>
+      <h2 class="section-title">Projetado<br>para o <em>seu pulso</em></h2>
+      <p>Interface nativa para Apple Watch com watchOS 10. Inicie, pause e encerre sua sessão sem tirar os olhos da quadra.</p>
+      <div class="ws-feat-list">
+        <div class="ws-feat-item">
+          <div class="ws-feat-icon">
+            <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+          </div>
+          <div class="ws-feat-text">
+            <h4>watchOS 10</h4>
+            <p>Interface nativa otimizada para a tela do Apple Watch com todas as complicações disponíveis.</p>
+          </div>
+        </div>
+        <div class="ws-feat-item">
+          <div class="ws-feat-icon">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          </div>
+          <div class="ws-feat-text">
+            <h4>Sincronização automática</h4>
+            <p>Dados transferidos automaticamente para o iPhone via WatchConnectivity ao aproximar os dispositivos.</p>
+          </div>
+        </div>
+        <div class="ws-feat-item">
+          <div class="ws-feat-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="ws-feat-text">
+            <h4>Offline First</h4>
+            <p>Sessões salvas no Watch mesmo sem conexão. Tudo sincronizado quando o iPhone estiver disponível.</p>
+          </div>
+        </div>
+        <div class="ws-feat-item">
+          <div class="ws-feat-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="ws-feat-text">
+            <h4>HealthKit nativo</h4>
+            <p>Cada sessão é registrada automaticamente no app Saúde do iPhone sem nenhuma ação extra.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ws-visual reveal" style="transition-delay:0.2s">
+      <div class="ws-glow"></div>
+      <div style="position:relative;">
+        <div class="ws-strap-top"></div>
+        <div class="ws-watch-large">
+          <div class="ws-screen-large">
+            <div class="wsl-live">Ao vivo</div>
+            <div class="wsl-app">Ventaglio</div>
+            <div class="wsl-bpm">148</div>
+            <div class="wsl-bpm-label">bpm · FC</div>
+            <div class="wsl-divider"></div>
+            <div class="wsl-mini-row">
+              <div class="wsl-mini">
+                <div class="wsl-mini-lbl">Calorias</div>
+                <div class="wsl-mini-val">312</div>
+              </div>
+              <div class="wsl-mini">
+                <div class="wsl-mini-lbl">Dist.</div>
+                <div class="wsl-mini-val">2.4k</div>
+              </div>
+              <div class="wsl-mini">
+                <div class="wsl-mini-lbl">Tempo</div>
+                <div class="wsl-mini-val">42m</div>
+              </div>
+            </div>
+            <div class="wsl-ring">
+              <svg viewBox="0 0 52 52" width="50" height="50">
+                <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(184,150,96,0.1)" stroke-width="4"/>
+                <circle cx="26" cy="26" r="20" fill="none" stroke="#b89660" stroke-width="4"
+                  stroke-dasharray="125.6" stroke-dashoffset="31.4" stroke-linecap="round"
+                  transform="rotate(-90 26 26)"/>
+                <text x="26" y="30" text-anchor="middle" fill="#d4b98a" font-size="9" font-family="Cormorant Garamond">75%</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="ws-strap-bottom"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRIVACY TRUST BAND ═══ -->
+<div class="privacy-band reveal">
+  <div class="pb-item">
+    <div class="pb-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div class="pb-text">
+      <strong>Dados no seu dispositivo</strong>
+      <span>Métricas de partida nunca saem do iPhone ou Watch</span>
+    </div>
+  </div>
+  <div class="pb-divider"></div>
+  <div class="pb-item">
+    <div class="pb-icon">
+      <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    </div>
+    <div class="pb-text">
+      <strong>100% offline após o login</strong>
+      <span>Tracking completo sem internet</span>
+    </div>
+  </div>
+  <div class="pb-divider"></div>
+  <div class="pb-item">
+    <div class="pb-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+    </div>
+    <div class="pb-text">
+      <strong>Sem anúncios, sem rastreamento</strong>
+      <span>Seus dados não são usados para publicidade</span>
+    </div>
+  </div>
+  <div class="pb-divider"></div>
+  <div class="pb-item">
+    <div class="pb-icon">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <div class="pb-text">
+      <strong>Integrado ao HealthKit</strong>
+      <span>Partidas salvas no app Saúde automaticamente</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq" id="faq">
+  <div class="faq-header reveal">
+    <div>
+      <div class="section-eyebrow">Perguntas frequentes</div>
+      <h2 class="section-title">Tudo que você<br>precisa <em>saber</em></h2>
+    </div>
+    <div class="faq-header-contact">
+      <p>Não encontrou o que procurava? Nossa equipe responde em até 2 dias úteis.</p>
+      <a href="mailto:support@ventaglio.app" class="faq-contact-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        support@ventaglio.app
+      </a>
+    </div>
+  </div>
+
+  <div class="faq-list reveal">
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">Minhas métricas não aparecem no iPhone. O que faço?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Abra o aplicativo Ventaglio no iPhone com o Apple Watch por perto. As métricas sincronizam automaticamente quando os dois dispositivos estão conectados. Se você jogou sem o iPhone por perto, os dados ficam salvos localmente no Watch e sincronizam assim que o iPhone voltar ao alcance.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">Posso usar o Ventaglio sem internet?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Sim. A única funcionalidade que requer internet é o login inicial. Depois de logado, todo o tracking de partidas funciona totalmente offline. As métricas sincronizam entre Watch e iPhone via Bluetooth local, não pela internet.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">Por que o app pede permissões do HealthKit?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">O Ventaglio usa o HealthKit para ler sua frequência cardíaca, calorias ativas, passos e distância durante partidas. Também salva partidas no app Saúde como treinos (com sua permissão). Todos os dados de saúde ficam no seu dispositivo — nunca são enviados para servidores externos.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">Meus dados vão para algum servidor?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">A única informação que sai do seu dispositivo é a autenticação (Login com Google via Firebase). Dados de partida, métricas de saúde e informações de perfil permanecem inteiramente nos seus dispositivos. Consulte a <a href="https://ventaglio.app/privacy-pt" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">Política de Privacidade completa</a> para mais detalhes.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">O app do Apple Watch não inicia ou trava. O que faço?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <ol>
+            <li>Force o fechamento do app no Watch (pressione o botão lateral, deslize o app para cima).</li>
+            <li>Verifique se o Watch está com a última versão do watchOS.</li>
+            <li>Confirme que o Ventaglio tem permissões de HealthKit e Localização em Ajustes → Privacidade.</li>
+            <li>Se persistir, envie email para support@ventaglio.app com o modelo do Watch e versão do watchOS.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        <span class="faq-q-text">Como apago minha conta?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">Para apagar dados locais (partidas e perfil), desinstale o app do iPhone e Apple Watch. Para excluir sua conta de autenticação, envie email para <a href="mailto:support@ventaglio.app" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">support@ventaglio.app</a> — excluiremos seu registro em até 30 dias.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="about-band">
+  <div class="ab-content reveal">
+    <div class="section-eyebrow">Sobre o app</div>
+    <h2 class="ab-title">Feito por quem<br>joga <em>beach tennis.</em></h2>
+    <p class="ab-text">O Ventaglio é um aplicativo independente desenvolvido por uma única pessoa que joga beach tennis. O objetivo é ajudar jogadores de todos os níveis a acompanharem seu desempenho com ferramentas simples, confiáveis e que respeitam sua privacidade.</p>
+  </div>
+  <div class="ab-stats reveal" style="transition-delay:0.15s">
+    <div class="ab-stat">
+      <div class="ab-stat-icon">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+      </div>
+      <div class="ab-stat-text">
+        <strong>iPhone + Apple Watch</strong>
+        <span>iOS &amp; watchOS nativos</span>
+      </div>
+    </div>
+    <div class="ab-stat">
+      <div class="ab-stat-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div class="ab-stat-text">
+        <strong>HealthKit + SwiftData</strong>
+        <span>Dados integrados e persistentes</span>
+      </div>
+    </div>
+    <div class="ab-stat">
+      <div class="ab-stat-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="ab-stat-text">
+        <strong>Privacidade em primeiro lugar</strong>
+        <span>LGPD &amp; GDPR compliant</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="download">
+  <div class="section-eyebrow reveal">Disponível agora</div>
+  <h2 class="reveal">Comece a <em>medir</em><br>sua evolução hoje</h2>
+  <p class="reveal">Gratuito para iPhone e Apple Watch. Comece sua primeira sessão em minutos.</p>
+  <div class="cta-actions reveal">
+    <a href="#" class="app-store-btn">
+      <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      <div class="app-store-btn-text">
+        <small>Disponível na</small>
+        <span>App Store</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <span class="footer-logo">Ventaglio</span>
+  <nav>
+    <ul>
+      <li><a href="https://ventaglio.app/privacy-pt">Privacidade</a></li>
+      <li><a href="https://ventaglio.app/support-pt">Suporte</a></li>
+      <li><a href="mailto:support@ventaglio.app">Contato</a></li>
+    </ul>
+  </nav>
+  <span class="footer-copy">© 2026 Ventaglio · Nikolas Mesquita do Nascimento</span>
+</footer>
+
+<script>
+/* ─── Nav scroll ─── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+/* ─── Scroll reveal ─── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ─── FAQ accordion ─── */
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ─── Screenshot tabs ─── */
+const captions = [
+  {
+    title: 'Dashboard',
+    desc: 'Visão geral da sua última sessão com todas as métricas em um só lugar. Acompanhe sua evolução ao longo do tempo.'
+  },
+  {
+    title: 'Histórico de sessões',
+    desc: 'Todas as suas partidas organizadas cronologicamente. Revise cada sessão com calorias, distância e frequência cardíaca.'
+  },
+  {
+    title: 'Sessão ao vivo',
+    desc: 'Interface limpa com dados em tempo real durante a partida. FC, calorias e distância atualizados a cada segundo.'
+  }
+];
+
+const tabs = document.querySelectorAll('.ss-tab');
+const phones = document.querySelectorAll('.ss-phone');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const idx = parseInt(tab.dataset.screen);
+
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    phones.forEach((p, i) => {
+      if (i === idx) {
+        p.classList.add('active-phone');
+        p.style.opacity = '1';
+        p.style.transform = 'scale(1.08)';
+      } else {
+        p.classList.remove('active-phone');
+        p.style.opacity = '0.5';
+        p.style.transform = 'scale(0.88)';
+      }
+    });
+
+    document.getElementById('ss-caption-title').textContent = captions[idx].title;
+    document.getElementById('ss-caption-desc').textContent = captions[idx].desc;
+  });
+});
+</script>
+</body>
+</html>
