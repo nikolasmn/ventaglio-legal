@@ -2313,6 +2313,42 @@ footer nav ul a:hover { color: var(--sand-300); }
   }
   footer nav ul { flex-wrap: wrap; justify-content: center; }
 }
+
+/* ─────────────────────────────────
+   LANGUAGE SWITCHER
+───────────────────────────────── */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  background: rgba(184,150,96,0.08);
+  border: 1px solid rgba(184,150,96,0.18);
+  border-radius: 20px;
+  padding: 0.2rem 0.3rem;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  border-radius: 16px;
+  opacity: 0.45;
+  transition: opacity 0.2s, background 0.2s;
+}
+.lang-btn:hover { opacity: 0.8; }
+.lang-btn.active {
+  opacity: 1;
+  background: rgba(184,150,96,0.18);
+}
 </style>
 </head>
 <body>
@@ -2321,27 +2357,33 @@ footer nav ul a:hover { color: var(--sand-300); }
 <nav id="nav">
   <a href="#" class="nav-logo">Ventag<span>lio</span></a>
   <ul>
-    <li><a href="#how">Como funciona</a></li>
-    <li><a href="#features">Funcionalidades</a></li>
+    <li><a href="#how" data-i18n="nav.how">Como funciona</a></li>
+    <li><a href="#features" data-i18n="nav.features">Funcionalidades</a></li>
     <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
-  <a href="#download" class="nav-cta">Baixar App</a>
+  <div class="nav-right">
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button class="lang-btn active" data-lang="pt" aria-label="Português" title="Português">🇧🇷</button>
+      <button class="lang-btn" data-lang="en" aria-label="English" title="English">🇬🇧</button>
+    </div>
+    <a href="#download" class="nav-cta" data-i18n="nav.cta">Baixar App</a>
+  </div>
 </nav>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-content">
     <p class="hero-eyebrow">Beach Tennis · iOS &amp; Apple Watch</p>
-    <h1>Seu jogo,<br>em <em>números.</em></h1>
-    <p class="hero-sub">Métricas de performance em tempo real direto no seu pulso. Frequência cardíaca, calorias, distância — tudo sincronizado com o HealthKit após cada partida.</p>
+    <h1 data-i18n-html="hero.h1">Seu jogo,<br>em <em>números.</em></h1>
+    <p class="hero-sub" data-i18n="hero.sub">Métricas de performance em tempo real direto no seu pulso. Frequência cardíaca, calorias, distância — tudo sincronizado com o HealthKit após cada partida.</p>
     <div class="hero-actions">
       <a href="#download" class="btn-primary">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
         App Store
       </a>
       <a href="#how" class="btn-secondary">
-        Como funciona
+        <span data-i18n="nav.how">Como funciona</span>
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -2353,17 +2395,17 @@ footer nav ul a:hover { color: var(--sand-300); }
       <!-- Floating chips -->
       <div class="hero-chip">
         <div class="chip-dot"></div>
-        <span class="chip-text">Ao vivo</span>
+        <span class="chip-text" data-i18n="chip.live">Ao vivo</span>
         <span class="chip-value">148 bpm</span>
       </div>
       <div class="hero-chip">
         <div class="chip-dot" style="background:#f5a623;box-shadow:0 0 6px #f5a62380;"></div>
-        <span class="chip-text">Calorias</span>
+        <span class="chip-text" data-i18n="chip.calories">Calorias</span>
         <span class="chip-value">312 kcal</span>
       </div>
       <div class="hero-chip">
         <div class="chip-dot" style="background:#4a9eff;box-shadow:0 0 6px #4a9eff80;"></div>
-        <span class="chip-text">Distância</span>
+        <span class="chip-text" data-i18n="chip.distance">Distância</span>
         <span class="chip-value">2.4 km</span>
       </div>
 
@@ -2373,21 +2415,21 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="iphone-screen">
           <div class="is-header">
             <div class="is-app-name">Ventaglio</div>
-            <div class="is-date">12 Jun<br>Hoje</div>
+            <div class="is-date">12 Jun<br><span data-i18n="mock.today">Hoje</span></div>
           </div>
           <div class="is-big-metric">
-            <div class="is-bm-label">Freq. Cardíaca</div>
+            <div class="is-bm-label" data-i18n="mock.hr">Freq. Cardíaca</div>
             <div class="is-bm-value">148</div>
-            <div class="is-bm-unit">bpm · ao vivo</div>
+            <div class="is-bm-unit" data-i18n="mock.bpm_live">bpm · ao vivo</div>
           </div>
           <div class="is-grid">
             <div class="is-tile">
-              <div class="is-tile-label">Calorias</div>
+              <div class="is-tile-label" data-i18n="chip.calories">Calorias</div>
               <div class="is-tile-value">312</div>
               <div class="is-tile-sub">kcal</div>
             </div>
             <div class="is-tile">
-              <div class="is-tile-label">Distância</div>
+              <div class="is-tile-label" data-i18n="chip.distance">Distância</div>
               <div class="is-tile-value">2.4</div>
               <div class="is-tile-sub">km</div>
             </div>
@@ -2400,12 +2442,12 @@ footer nav ul a:hover { color: var(--sand-300); }
                 <text x="19" y="22" text-anchor="middle" fill="#d4b98a" font-size="6" font-family="Cormorant Garamond">75%</text>
               </svg>
               <div class="is-ring-tile-text">
-                <div class="is-ring-label">Meta diária</div>
-                <div class="is-ring-val">75% concluído</div>
+                <div class="is-ring-label" data-i18n="mock.daily_goal">Meta diária</div>
+                <div class="is-ring-val" data-i18n="mock.pct_done">75% concluído</div>
               </div>
             </div>
             <div class="is-tile">
-              <div class="is-tile-label">Duração</div>
+              <div class="is-tile-label" data-i18n="mock.duration">Duração</div>
               <div class="is-tile-value">42:18</div>
               <div class="is-tile-sub">min</div>
             </div>
@@ -2452,43 +2494,43 @@ footer nav ul a:hover { color: var(--sand-300); }
 <div class="trust-bar">
   <div class="trust-item">
     <span class="trust-num">6<sup>+</sup></span>
-    <span class="trust-label">Métricas em tempo real</span>
+    <span class="trust-label" data-i18n="trust.metrics">Métricas em tempo real</span>
   </div>
   <div class="trust-item">
     <span class="trust-num">∞</span>
-    <span class="trust-label">Histórico de sessões</span>
+    <span class="trust-label" data-i18n="trust.history">Histórico de sessões</span>
   </div>
   <div class="trust-item">
     <span class="trust-num">1<sup>s</sup></span>
-    <span class="trust-label">Atualização ao vivo</span>
+    <span class="trust-label" data-i18n="trust.update">Atualização ao vivo</span>
   </div>
   <div class="trust-item">
     <span class="trust-num">100<sup>%</sup></span>
-    <span class="trust-label">Nativo · watchOS 10</span>
+    <span class="trust-label" data-i18n="trust.native">Nativo · watchOS 10</span>
   </div>
 </div>
 
 <!-- ═══ HOW IT WORKS ═══ -->
 <section class="how-it-works" id="how">
   <div class="hiw-header reveal">
-    <div class="section-eyebrow" style="justify-content:center">Como funciona</div>
-    <h2 class="section-title" style="text-align:center;margin:0 auto;">Três passos para <em>começar</em></h2>
+    <div class="section-eyebrow" style="justify-content:center" data-i18n="nav.how">Como funciona</div>
+    <h2 class="section-title" style="text-align:center;margin:0 auto;" data-i18n-html="hiw.h2">Três passos para <em>começar</em></h2>
   </div>
   <div class="hiw-steps">
     <div class="hiw-step reveal">
       <div class="hiw-num">1</div>
-      <h3 class="hiw-step-title">Abra no Apple Watch</h3>
-      <p class="hiw-step-desc">Com o Ventaglio instalado, abra o app diretamente no Watch antes de entrar em quadra.</p>
+      <h3 class="hiw-step-title" data-i18n="hiw.s1.title">Abra no Apple Watch</h3>
+      <p class="hiw-step-desc" data-i18n="hiw.s1.desc">Com o Ventaglio instalado, abra o app diretamente no Watch antes de entrar em quadra.</p>
     </div>
     <div class="hiw-step reveal" style="transition-delay:0.15s">
       <div class="hiw-num">2</div>
-      <h3 class="hiw-step-title">Inicie sua sessão</h3>
-      <p class="hiw-step-desc">Toque em Iniciar. O app começa a capturar frequência cardíaca, calorias e distância instantaneamente.</p>
+      <h3 class="hiw-step-title" data-i18n="hiw.s2.title">Inicie sua sessão</h3>
+      <p class="hiw-step-desc" data-i18n="hiw.s2.desc">Toque em Iniciar. O app começa a capturar frequência cardíaca, calorias e distância instantaneamente.</p>
     </div>
     <div class="hiw-step reveal" style="transition-delay:0.3s">
       <div class="hiw-num">3</div>
-      <h3 class="hiw-step-title">Revise no iPhone</h3>
-      <p class="hiw-step-desc">Ao encerrar, todos os dados são sincronizados com o iPhone e salvos no HealthKit automaticamente.</p>
+      <h3 class="hiw-step-title" data-i18n="hiw.s3.title">Revise no iPhone</h3>
+      <p class="hiw-step-desc" data-i18n="hiw.s3.desc">Ao encerrar, todos os dados são sincronizados com o iPhone e salvos no HealthKit automaticamente.</p>
     </div>
   </div>
 </section>
@@ -2497,65 +2539,59 @@ footer nav ul a:hover { color: var(--sand-300); }
 <section class="features" id="features">
   <div class="features-header reveal">
     <div>
-      <div class="section-eyebrow">Funcionalidades</div>
-      <h2 class="section-title">Tudo que você precisa<br>para <em>evoluir</em></h2>
+      <div class="section-eyebrow" data-i18n="nav.features">Funcionalidades</div>
+      <h2 class="section-title" data-i18n-html="feat.h2">Tudo que você precisa<br>para <em>evoluir</em></h2>
     </div>
-    <p class="features-header-note">Cada métrica foi pensada especificamente para o beach tennis — capturada com precisão e entregue em tempo real no seu pulso.</p>
+    <p class="features-header-note" data-i18n="feat.note">Cada métrica foi pensada especificamente para o beach tennis — capturada com precisão e entregue em tempo real no seu pulso.</p>
   </div>
   <div class="features-grid">
 
     <div class="feature-card reveal">
       <div class="feature-icon-wrap">
-        <!-- Heart rate -->
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <h3 class="feature-title">Frequência Cardíaca</h3>
-      <p class="feature-desc">Monitoramento contínuo via HealthKit. Acompanhe sua zona de treino em tempo real e a recuperação entre pontos.</p>
+      <h3 class="feature-title" data-i18n="feat.f1.title">Frequência Cardíaca</h3>
+      <p class="feature-desc" data-i18n="feat.f1.desc">Monitoramento contínuo via HealthKit. Acompanhe sua zona de treino em tempo real e a recuperação entre pontos.</p>
     </div>
 
     <div class="feature-card reveal" style="transition-delay:0.1s">
       <div class="feature-icon-wrap">
-        <!-- Flame / calories -->
         <svg viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/><path d="M12 2c0 4 3 6 3 10a3 3 0 0 1-6 0c0-4 3-6 3-10z"/></svg>
       </div>
-      <h3 class="feature-title">Calorias Ativas</h3>
-      <p class="feature-desc">Cálculo preciso de gasto calórico baseado nos seus dados do HealthKit, atualizado a cada segundo de partida.</p>
+      <h3 class="feature-title" data-i18n="feat.f2.title">Calorias Ativas</h3>
+      <p class="feature-desc" data-i18n="feat.f2.desc">Cálculo preciso de gasto calórico baseado nos seus dados do HealthKit, atualizado a cada segundo de partida.</p>
     </div>
 
     <div class="feature-card reveal" style="transition-delay:0.2s">
       <div class="feature-icon-wrap">
-        <!-- Map pin / distance -->
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
       </div>
-      <h3 class="feature-title">Distância</h3>
-      <p class="feature-desc">Saiba exatamente quantos metros você percorre por jogo. Dados filtrados por velocidade para máxima precisão em quadra.</p>
+      <h3 class="feature-title" data-i18n="feat.f3.title">Distância</h3>
+      <p class="feature-desc" data-i18n="feat.f3.desc">Saiba exatamente quantos metros você percorre por jogo. Dados filtrados por velocidade para máxima precisão em quadra.</p>
     </div>
 
     <div class="feature-card reveal" style="transition-delay:0.3s">
       <div class="feature-icon-wrap">
-        <!-- Steps / shoe -->
         <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.17h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l1.69-1.84a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       </div>
-      <h3 class="feature-title">Contagem de Passos</h3>
-      <p class="feature-desc">Coleta dedicada de passos otimizada para a dinâmica única do beach tennis, sincronizada ao HealthKit.</p>
+      <h3 class="feature-title" data-i18n="feat.f4.title">Contagem de Passos</h3>
+      <p class="feature-desc" data-i18n="feat.f4.desc">Coleta dedicada de passos otimizada para a dinâmica única do beach tennis, sincronizada ao HealthKit.</p>
     </div>
 
     <div class="feature-card reveal" style="transition-delay:0.4s">
       <div class="feature-icon-wrap">
-        <!-- Clock -->
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
-      <h3 class="feature-title">Duração da Sessão</h3>
-      <p class="feature-desc">Tempo total de jogo rastreado automaticamente. Cada sessão salva localmente no dispositivo via SwiftData.</p>
+      <h3 class="feature-title" data-i18n="feat.f5.title">Duração da Sessão</h3>
+      <p class="feature-desc" data-i18n="feat.f5.desc">Tempo total de jogo rastreado automaticamente. Cada sessão salva localmente no dispositivo via SwiftData.</p>
     </div>
 
     <div class="feature-card reveal" style="transition-delay:0.5s">
       <div class="feature-icon-wrap">
-        <!-- Chart / history -->
         <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </div>
-      <h3 class="feature-title">Histórico Completo</h3>
-      <p class="feature-desc">Todas as suas sessões organizadas no iPhone. Acompanhe sua evolução ao longo do tempo com dados persistentes.</p>
+      <h3 class="feature-title" data-i18n="feat.f6.title">Histórico Completo</h3>
+      <p class="feature-desc" data-i18n="feat.f6.desc">Todas as suas sessões organizadas no iPhone. Acompanhe sua evolução ao longo do tempo com dados persistentes.</p>
     </div>
 
   </div>
@@ -2565,14 +2601,14 @@ footer nav ul a:hover { color: var(--sand-300); }
 <section class="screenshots" id="screenshots">
   <div class="ss-header reveal">
     <div class="section-eyebrow">Screenshots</div>
-    <h2 class="section-title">Desenhado para<br>quem <em>joga de verdade.</em></h2>
-    <p>Interface limpa, dados no centro. Tudo que você precisa saber sobre sua partida em um olhar.</p>
+    <h2 class="section-title" data-i18n-html="ss.h2">Desenhado para<br>quem <em>joga de verdade.</em></h2>
+    <p data-i18n="ss.sub">Interface limpa, dados no centro. Tudo que você precisa saber sobre sua partida em um olhar.</p>
   </div>
 
   <div class="ss-tabs reveal">
-    <button class="ss-tab active" data-screen="0">Dashboard</button>
-    <button class="ss-tab" data-screen="1">Histórico</button>
-    <button class="ss-tab" data-screen="2">Sessão ao vivo</button>
+    <button class="ss-tab active" data-screen="0" data-i18n="ss.tab0">Dashboard</button>
+    <button class="ss-tab" data-screen="1" data-i18n="ss.tab1">Histórico</button>
+    <button class="ss-tab" data-screen="2" data-i18n="ss.tab2">Sessão ao vivo</button>
   </div>
 
   <div class="ss-display reveal">
@@ -2583,28 +2619,28 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="ss-island"></div>
         <div class="ss-phone-screen">
           <div class="screen-dashboard">
-            <div class="sd-greeting">Boa tarde, Nikolas</div>
-            <div class="sd-title">Última<br>sessão</div>
+            <div class="sd-greeting" data-i18n="ss.greeting">Boa tarde, Nikolas</div>
+            <div class="sd-title" data-i18n-html="ss.last_session">Última<br>sessão</div>
             <div class="sd-hero-card">
-              <div class="sd-hero-label">Frequência Cardíaca Máx.</div>
+              <div class="sd-hero-label" data-i18n="ss.max_hr">Frequência Cardíaca Máx.</div>
               <div class="sd-hero-value">172</div>
               <div class="sd-hero-sub">bpm · 12 Jun, 1h08min</div>
             </div>
             <div class="sd-mini-grid">
               <div class="sd-mini">
-                <div class="sd-mini-lbl">Calorias</div>
+                <div class="sd-mini-lbl" data-i18n="chip.calories">Calorias</div>
                 <div class="sd-mini-val">487</div>
               </div>
               <div class="sd-mini">
-                <div class="sd-mini-lbl">Distância</div>
+                <div class="sd-mini-lbl" data-i18n="chip.distance">Distância</div>
                 <div class="sd-mini-val">3.8km</div>
               </div>
               <div class="sd-mini">
-                <div class="sd-mini-lbl">Passos</div>
+                <div class="sd-mini-lbl" data-i18n="ss.steps">Passos</div>
                 <div class="sd-mini-val">5241</div>
               </div>
               <div class="sd-mini">
-                <div class="sd-mini-lbl">FC Média</div>
+                <div class="sd-mini-lbl" data-i18n="ss.avg_hr">FC Média</div>
                 <div class="sd-mini-val">141</div>
               </div>
             </div>
@@ -2619,7 +2655,7 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="ss-island"></div>
         <div class="ss-phone-screen">
           <div class="screen-history">
-            <div class="sh-title">Histórico</div>
+            <div class="sh-title" data-i18n="ss.tab1">Histórico</div>
             <div class="sh-session">
               <div class="sh-session-top">
                 <div class="sh-date">12 Jun · Qua</div>
@@ -2674,10 +2710,10 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="ss-island"></div>
         <div class="ss-phone-screen">
           <div class="screen-live">
-            <div class="sl-live">Ao vivo · 42:18</div>
+            <div class="sl-live" data-i18n="ss.live_time">Ao vivo · 42:18</div>
             <div class="sl-bpm">
               <div class="sl-bpm-val">148</div>
-              <div class="sl-bpm-unit">Frequência Cardíaca</div>
+              <div class="sl-bpm-unit" data-i18n="feat.f1.title">Frequência Cardíaca</div>
             </div>
             <div class="sl-divider"></div>
             <div class="sl-row">
@@ -2687,14 +2723,14 @@ footer nav ul a:hover { color: var(--sand-300); }
               </div>
               <div class="sl-item">
                 <div class="sl-item-val">2.4km</div>
-                <div class="sl-item-lbl">Distância</div>
+                <div class="sl-item-lbl" data-i18n="chip.distance">Distância</div>
               </div>
               <div class="sl-item">
                 <div class="sl-item-val">4.2k</div>
-                <div class="sl-item-lbl">Passos</div>
+                <div class="sl-item-lbl" data-i18n="ss.steps">Passos</div>
               </div>
             </div>
-            <div class="sl-stop-btn">Encerrar sessão</div>
+            <div class="sl-stop-btn" data-i18n="ss.end_session">Encerrar sessão</div>
           </div>
         </div>
       </div>
@@ -2708,6 +2744,7 @@ footer nav ul a:hover { color: var(--sand-300); }
   </div>
 </section>
 
+
 <!-- ═══ METRICS SHOWCASE ═══ -->
 <section class="metrics-section">
   <div class="ms-visual reveal">
@@ -2716,9 +2753,9 @@ footer nav ul a:hover { color: var(--sand-300); }
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
       <div>
-        <div class="ms-label">FC Máxima · sessão anterior</div>
+        <div class="ms-label" data-i18n="ms.max_hr_label">FC Máxima · sessão anterior</div>
         <div class="ms-value">172 bpm</div>
-        <div class="ms-sub">Registrado aos 38 min de partida</div>
+        <div class="ms-sub" data-i18n="ms.max_hr_sub">Registrado aos 38 min de partida</div>
       </div>
     </div>
     <div class="ms-grid">
@@ -2726,43 +2763,43 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="ms-icon">
           <svg viewBox="0 0 24 24"><path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/></svg>
         </div>
-        <div class="ms-label">Calorias</div>
+        <div class="ms-label" data-i18n="chip.calories">Calorias</div>
         <div class="ms-value">487</div>
-        <div class="ms-sub">kcal em 68 min</div>
+        <div class="ms-sub" data-i18n="ms.kcal_sub">kcal em 68 min</div>
       </div>
       <div class="ms-card">
         <div class="ms-icon">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
-        <div class="ms-label">Distância</div>
+        <div class="ms-label" data-i18n="chip.distance">Distância</div>
         <div class="ms-value">3.8</div>
-        <div class="ms-sub">km percorridos</div>
+        <div class="ms-sub" data-i18n="ms.km_sub">km percorridos</div>
       </div>
       <div class="ms-card">
         <div class="ms-icon">
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
-        <div class="ms-label">Passos</div>
+        <div class="ms-label" data-i18n="ss.steps">Passos</div>
         <div class="ms-value">5.241</div>
-        <div class="ms-sub">na sessão</div>
+        <div class="ms-sub" data-i18n="ms.steps_sub">na sessão</div>
       </div>
       <div class="ms-card">
         <div class="ms-icon">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div class="ms-label">Duração</div>
+        <div class="ms-label" data-i18n="mock.duration">Duração</div>
         <div class="ms-value">1h08</div>
-        <div class="ms-sub">tempo em quadra</div>
+        <div class="ms-sub" data-i18n="ms.dur_sub">tempo em quadra</div>
       </div>
     </div>
   </div>
 
   <div class="ms-content reveal" style="transition-delay:0.15s">
-    <div class="section-eyebrow">Dados Inteligentes</div>
-    <h2 class="section-title">Cada número<br>conta uma <em>história</em></h2>
-    <p>O Ventaglio captura e organiza suas métricas em cada partida — do aquecimento ao último ponto. Tudo integrado nativamente ao HealthKit, sem configuração extra.</p>
+    <div class="section-eyebrow" data-i18n="ms.eyebrow">Dados Inteligentes</div>
+    <h2 class="section-title" data-i18n-html="ms.h2">Cada número<br>conta uma <em>história</em></h2>
+    <p data-i18n="ms.body">O Ventaglio captura e organiza suas métricas em cada partida — do aquecimento ao último ponto. Tudo integrado nativamente ao HealthKit, sem configuração extra.</p>
     <a href="#download" class="btn-primary" style="display:inline-flex">
-      Começar agora
+      <span data-i18n="ms.cta">Começar agora</span>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
@@ -2773,8 +2810,8 @@ footer nav ul a:hover { color: var(--sand-300); }
   <div class="ws-inner">
     <div class="ws-content reveal">
       <div class="section-eyebrow">Apple Watch</div>
-      <h2 class="section-title">Projetado<br>para o <em>seu pulso</em></h2>
-      <p>Interface nativa para Apple Watch com watchOS 10. Inicie, pause e encerre sua sessão sem tirar os olhos da quadra.</p>
+      <h2 class="section-title" data-i18n-html="watch.h2">Projetado<br>para o <em>seu pulso</em></h2>
+      <p data-i18n="watch.sub">Interface nativa para Apple Watch com watchOS 10. Inicie, pause e encerre sua sessão sem tirar os olhos da quadra.</p>
       <div class="ws-feat-list">
         <div class="ws-feat-item">
           <div class="ws-feat-icon">
@@ -2782,7 +2819,7 @@ footer nav ul a:hover { color: var(--sand-300); }
           </div>
           <div class="ws-feat-text">
             <h4>watchOS 10</h4>
-            <p>Interface nativa otimizada para a tela do Apple Watch com todas as complicações disponíveis.</p>
+            <p data-i18n="watch.f1.desc">Interface nativa otimizada para a tela do Apple Watch com todas as complicações disponíveis.</p>
           </div>
         </div>
         <div class="ws-feat-item">
@@ -2790,8 +2827,8 @@ footer nav ul a:hover { color: var(--sand-300); }
             <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
           </div>
           <div class="ws-feat-text">
-            <h4>Sincronização automática</h4>
-            <p>Dados transferidos automaticamente para o iPhone via WatchConnectivity ao aproximar os dispositivos.</p>
+            <h4 data-i18n="watch.f2.title">Sincronização automática</h4>
+            <p data-i18n="watch.f2.desc">Dados transferidos automaticamente para o iPhone via WatchConnectivity ao aproximar os dispositivos.</p>
           </div>
         </div>
         <div class="ws-feat-item">
@@ -2800,7 +2837,7 @@ footer nav ul a:hover { color: var(--sand-300); }
           </div>
           <div class="ws-feat-text">
             <h4>Offline First</h4>
-            <p>Sessões salvas no Watch mesmo sem conexão. Tudo sincronizado quando o iPhone estiver disponível.</p>
+            <p data-i18n="watch.f3.desc">Sessões salvas no Watch mesmo sem conexão. Tudo sincronizado quando o iPhone estiver disponível.</p>
           </div>
         </div>
         <div class="ws-feat-item">
@@ -2809,7 +2846,7 @@ footer nav ul a:hover { color: var(--sand-300); }
           </div>
           <div class="ws-feat-text">
             <h4>HealthKit nativo</h4>
-            <p>Cada sessão é registrada automaticamente no app Saúde do iPhone sem nenhuma ação extra.</p>
+            <p data-i18n="watch.f4.desc">Cada sessão é registrada automaticamente no app Saúde do iPhone sem nenhuma ação extra.</p>
           </div>
         </div>
       </div>
@@ -2821,14 +2858,14 @@ footer nav ul a:hover { color: var(--sand-300); }
         <div class="ws-strap-top"></div>
         <div class="ws-watch-large">
           <div class="ws-screen-large">
-            <div class="wsl-live">Ao vivo</div>
+            <div class="wsl-live" data-i18n="chip.live">Ao vivo</div>
             <div class="wsl-app">Ventaglio</div>
             <div class="wsl-bpm">148</div>
             <div class="wsl-bpm-label">bpm · FC</div>
             <div class="wsl-divider"></div>
             <div class="wsl-mini-row">
               <div class="wsl-mini">
-                <div class="wsl-mini-lbl">Calorias</div>
+                <div class="wsl-mini-lbl" data-i18n="chip.calories">Calorias</div>
                 <div class="wsl-mini-val">312</div>
               </div>
               <div class="wsl-mini">
@@ -2836,7 +2873,7 @@ footer nav ul a:hover { color: var(--sand-300); }
                 <div class="wsl-mini-val">2.4k</div>
               </div>
               <div class="wsl-mini">
-                <div class="wsl-mini-lbl">Tempo</div>
+                <div class="wsl-mini-lbl" data-i18n="watch.time">Tempo</div>
                 <div class="wsl-mini-val">42m</div>
               </div>
             </div>
@@ -2864,8 +2901,8 @@ footer nav ul a:hover { color: var(--sand-300); }
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <div class="pb-text">
-      <strong>Dados no seu dispositivo</strong>
-      <span>Métricas de partida nunca saem do iPhone ou Watch</span>
+      <strong data-i18n="pb.p1.title">Dados no seu dispositivo</strong>
+      <span data-i18n="pb.p1.sub">Métricas de partida nunca saem do iPhone ou Watch</span>
     </div>
   </div>
   <div class="pb-divider"></div>
@@ -2874,8 +2911,8 @@ footer nav ul a:hover { color: var(--sand-300); }
       <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
     </div>
     <div class="pb-text">
-      <strong>100% offline após o login</strong>
-      <span>Tracking completo sem internet</span>
+      <strong data-i18n="pb.p2.title">100% offline após o login</strong>
+      <span data-i18n="pb.p2.sub">Tracking completo sem internet</span>
     </div>
   </div>
   <div class="pb-divider"></div>
@@ -2884,8 +2921,8 @@ footer nav ul a:hover { color: var(--sand-300); }
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
     </div>
     <div class="pb-text">
-      <strong>Sem anúncios, sem rastreamento</strong>
-      <span>Seus dados não são usados para publicidade</span>
+      <strong data-i18n="pb.p3.title">Sem anúncios, sem rastreamento</strong>
+      <span data-i18n="pb.p3.sub">Seus dados não são usados para publicidade</span>
     </div>
   </div>
   <div class="pb-divider"></div>
@@ -2894,8 +2931,8 @@ footer nav ul a:hover { color: var(--sand-300); }
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </div>
     <div class="pb-text">
-      <strong>Integrado ao HealthKit</strong>
-      <span>Partidas salvas no app Saúde automaticamente</span>
+      <strong data-i18n="pb.p4.title">Integrado ao HealthKit</strong>
+      <span data-i18n="pb.p4.sub">Partidas salvas no app Saúde automaticamente</span>
     </div>
   </div>
 </div>
@@ -2904,11 +2941,11 @@ footer nav ul a:hover { color: var(--sand-300); }
 <section class="faq" id="faq">
   <div class="faq-header reveal">
     <div>
-      <div class="section-eyebrow">Perguntas frequentes</div>
-      <h2 class="section-title">Tudo que você<br>precisa <em>saber</em></h2>
+      <div class="section-eyebrow" data-i18n="faq.eyebrow">Perguntas frequentes</div>
+      <h2 class="section-title" data-i18n-html="faq.h2">Tudo que você<br>precisa <em>saber</em></h2>
     </div>
     <div class="faq-header-contact">
-      <p>Não encontrou o que procurava? Nossa equipe responde em até 2 dias úteis.</p>
+      <p data-i18n="faq.contact_note">Não encontrou o que procurava? Nossa equipe responde em até 2 dias úteis.</p>
       <a href="mailto:support@ventaglio.app" class="faq-contact-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         support@ventaglio.app
@@ -2920,51 +2957,51 @@ footer nav ul a:hover { color: var(--sand-300); }
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">Minhas métricas não aparecem no iPhone. O que faço?</span>
+        <span class="faq-q-text" data-i18n="faq.q1">Minhas métricas não aparecem no iPhone. O que faço?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">Abra o aplicativo Ventaglio no iPhone com o Apple Watch por perto. As métricas sincronizam automaticamente quando os dois dispositivos estão conectados. Se você jogou sem o iPhone por perto, os dados ficam salvos localmente no Watch e sincronizam assim que o iPhone voltar ao alcance.</div>
+        <div class="faq-answer-inner" data-i18n="faq.a1">Abra o aplicativo Ventaglio no iPhone com o Apple Watch por perto. As métricas sincronizam automaticamente quando os dois dispositivos estão conectados. Se você jogou sem o iPhone por perto, os dados ficam salvos localmente no Watch e sincronizam assim que o iPhone voltar ao alcance.</div>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">Posso usar o Ventaglio sem internet?</span>
+        <span class="faq-q-text" data-i18n="faq.q2">Posso usar o Ventaglio sem internet?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">Sim. A única funcionalidade que requer internet é o login inicial. Depois de logado, todo o tracking de partidas funciona totalmente offline. As métricas sincronizam entre Watch e iPhone via Bluetooth local, não pela internet.</div>
+        <div class="faq-answer-inner" data-i18n="faq.a2">Sim. A única funcionalidade que requer internet é o login inicial. Depois de logado, todo o tracking de partidas funciona totalmente offline. As métricas sincronizam entre Watch e iPhone via Bluetooth local, não pela internet.</div>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">Por que o app pede permissões do HealthKit?</span>
+        <span class="faq-q-text" data-i18n="faq.q3">Por que o app pede permissões do HealthKit?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">O Ventaglio usa o HealthKit para ler sua frequência cardíaca, calorias ativas, passos e distância durante partidas. Também salva partidas no app Saúde como treinos (com sua permissão). Todos os dados de saúde ficam no seu dispositivo — nunca são enviados para servidores externos.</div>
+        <div class="faq-answer-inner" data-i18n="faq.a3">O Ventaglio usa o HealthKit para ler sua frequência cardíaca, calorias ativas, passos e distância durante partidas. Também salva partidas no app Saúde como treinos (com sua permissão). Todos os dados de saúde ficam no seu dispositivo — nunca são enviados para servidores externos.</div>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">Meus dados vão para algum servidor?</span>
+        <span class="faq-q-text" data-i18n="faq.q4">Meus dados vão para algum servidor?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">A única informação que sai do seu dispositivo é a autenticação (Login com Google via Firebase). Dados de partida, métricas de saúde e informações de perfil permanecem inteiramente nos seus dispositivos. Consulte a <a href="https://ventaglio.app/privacy-pt" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">Política de Privacidade completa</a> para mais detalhes.</div>
+        <div class="faq-answer-inner" data-i18n-html="faq.a4">A única informação que sai do seu dispositivo é a autenticação (Login com Google via Firebase). Dados de partida, métricas de saúde e informações de perfil permanecem inteiramente nos seus dispositivos. Consulte a <a href="https://ventaglio.app/privacy-pt" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">Política de Privacidade completa</a> para mais detalhes.</div>
       </div>
     </div>
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">O app do Apple Watch não inicia ou trava. O que faço?</span>
+        <span class="faq-q-text" data-i18n="faq.q5">O app do Apple Watch não inicia ou trava. O que faço?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">
+        <div class="faq-answer-inner" data-i18n-html="faq.a5">
           <ol>
             <li>Force o fechamento do app no Watch (pressione o botão lateral, deslize o app para cima).</li>
             <li>Verifique se o Watch está com a última versão do watchOS.</li>
@@ -2977,11 +3014,11 @@ footer nav ul a:hover { color: var(--sand-300); }
 
     <div class="faq-item">
       <button class="faq-question">
-        <span class="faq-q-text">Como apago minha conta?</span>
+        <span class="faq-q-text" data-i18n="faq.q6">Como apago minha conta?</span>
         <span class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
       </button>
       <div class="faq-answer">
-        <div class="faq-answer-inner">Para apagar dados locais (partidas e perfil), desinstale o app do iPhone e Apple Watch. Para excluir sua conta de autenticação, envie email para <a href="mailto:support@ventaglio.app" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">support@ventaglio.app</a> — excluiremos seu registro em até 30 dias.</div>
+        <div class="faq-answer-inner" data-i18n-html="faq.a6">Para apagar dados locais (partidas e perfil), desinstale o app do iPhone e Apple Watch. Para excluir sua conta de autenticação, envie email para <a href="mailto:support@ventaglio.app" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">support@ventaglio.app</a> — excluiremos seu registro em até 30 dias.</div>
       </div>
     </div>
 
@@ -2991,9 +3028,9 @@ footer nav ul a:hover { color: var(--sand-300); }
 <!-- ═══ ABOUT ═══ -->
 <div class="about-band">
   <div class="ab-content reveal">
-    <div class="section-eyebrow">Sobre o app</div>
-    <h2 class="ab-title">Feito por quem<br>joga <em>beach tennis.</em></h2>
-    <p class="ab-text">O Ventaglio é um aplicativo independente desenvolvido por uma única pessoa que joga beach tennis. O objetivo é ajudar jogadores de todos os níveis a acompanharem seu desempenho com ferramentas simples, confiáveis e que respeitam sua privacidade.</p>
+    <div class="section-eyebrow" data-i18n="about.eyebrow">Sobre o app</div>
+    <h2 class="ab-title" data-i18n-html="about.h2">Feito por quem<br>joga <em>beach tennis.</em></h2>
+    <p class="ab-text" data-i18n="about.body">O Ventaglio é um aplicativo independente desenvolvido por uma única pessoa que joga beach tennis. O objetivo é ajudar jogadores de todos os níveis a acompanharem seu desempenho com ferramentas simples, confiáveis e que respeitam sua privacidade.</p>
   </div>
   <div class="ab-stats reveal" style="transition-delay:0.15s">
     <div class="ab-stat">
@@ -3019,7 +3056,7 @@ footer nav ul a:hover { color: var(--sand-300); }
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <div class="ab-stat-text">
-        <strong>Privacidade em primeiro lugar</strong>
+        <strong data-i18n="about.privacy_title">Privacidade em primeiro lugar</strong>
         <span>LGPD &amp; GDPR compliant</span>
       </div>
     </div>
@@ -3028,14 +3065,14 @@ footer nav ul a:hover { color: var(--sand-300); }
 
 <!-- ═══ CTA ═══ -->
 <section class="cta-section" id="download">
-  <div class="section-eyebrow reveal">Disponível agora</div>
-  <h2 class="reveal">Comece a <em>medir</em><br>sua evolução hoje</h2>
-  <p class="reveal">Gratuito para iPhone e Apple Watch. Comece sua primeira sessão em minutos.</p>
+  <div class="section-eyebrow reveal" data-i18n="cta.eyebrow">Disponível agora</div>
+  <h2 class="reveal" data-i18n-html="cta.h2">Comece a <em>medir</em><br>sua evolução hoje</h2>
+  <p class="reveal" data-i18n="cta.sub">Gratuito para iPhone e Apple Watch. Comece sua primeira sessão em minutos.</p>
   <div class="cta-actions reveal">
     <a href="#" class="app-store-btn">
       <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
       <div class="app-store-btn-text">
-        <small>Disponível na</small>
+        <small data-i18n="cta.available_on">Disponível na</small>
         <span>App Store</span>
       </div>
     </a>
@@ -3047,22 +3084,330 @@ footer nav ul a:hover { color: var(--sand-300); }
   <span class="footer-logo">Ventaglio</span>
   <nav>
     <ul>
-      <li><a href="https://ventaglio.app/privacy-pt">Privacidade</a></li>
-      <li><a href="https://ventaglio.app/support-pt">Suporte</a></li>
-      <li><a href="mailto:support@ventaglio.app">Contato</a></li>
+      <li><a href="https://ventaglio.app/privacy-pt" id="footer-privacy" data-i18n="footer.privacy">Privacidade</a></li>
+      <li><a href="https://ventaglio.app/support-pt" id="footer-support" data-i18n="footer.support">Suporte</a></li>
+      <li><a href="mailto:support@ventaglio.app" data-i18n="footer.contact">Contato</a></li>
     </ul>
   </nav>
   <span class="footer-copy">© 2026 Ventaglio · Nikolas Mesquita do Nascimento</span>
 </footer>
 
 <script>
-/* ─── Nav scroll ─── */
+/* ═══════════════════════════════════════
+   i18n — translations
+═══════════════════════════════════════ */
+const T = {
+  pt: {
+    'nav.how': 'Como funciona',
+    'nav.features': 'Funcionalidades',
+    'nav.cta': 'Baixar App',
+
+    'hero.h1': 'Seu jogo,<br>em <em>números.</em>',
+    'hero.sub': 'Métricas de performance em tempo real direto no seu pulso. Frequência cardíaca, calorias, distância — tudo sincronizado com o HealthKit após cada partida.',
+
+    'chip.live': 'Ao vivo',
+    'chip.calories': 'Calorias',
+    'chip.distance': 'Distância',
+
+    'mock.today': 'Hoje',
+    'mock.hr': 'Freq. Cardíaca',
+    'mock.bpm_live': 'bpm · ao vivo',
+    'mock.daily_goal': 'Meta diária',
+    'mock.pct_done': '75% concluído',
+    'mock.duration': 'Duração',
+
+    'trust.metrics': 'Métricas em tempo real',
+    'trust.history': 'Histórico de sessões',
+    'trust.update': 'Atualização ao vivo',
+    'trust.native': 'Nativo · watchOS 10',
+
+    'hiw.h2': 'Três passos para <em>começar</em>',
+    'hiw.s1.title': 'Abra no Apple Watch',
+    'hiw.s1.desc': 'Com o Ventaglio instalado, abra o app diretamente no Watch antes de entrar em quadra.',
+    'hiw.s2.title': 'Inicie sua sessão',
+    'hiw.s2.desc': 'Toque em Iniciar. O app começa a capturar frequência cardíaca, calorias e distância instantaneamente.',
+    'hiw.s3.title': 'Revise no iPhone',
+    'hiw.s3.desc': 'Ao encerrar, todos os dados são sincronizados com o iPhone e salvos no HealthKit automaticamente.',
+
+    'feat.h2': 'Tudo que você precisa<br>para <em>evoluir</em>',
+    'feat.note': 'Cada métrica foi pensada especificamente para o beach tennis — capturada com precisão e entregue em tempo real no seu pulso.',
+    'feat.f1.title': 'Frequência Cardíaca',
+    'feat.f1.desc': 'Monitoramento contínuo via HealthKit. Acompanhe sua zona de treino em tempo real e a recuperação entre pontos.',
+    'feat.f2.title': 'Calorias Ativas',
+    'feat.f2.desc': 'Cálculo preciso de gasto calórico baseado nos seus dados do HealthKit, atualizado a cada segundo de partida.',
+    'feat.f3.title': 'Distância',
+    'feat.f3.desc': 'Saiba exatamente quantos metros você percorre por jogo. Dados filtrados por velocidade para máxima precisão em quadra.',
+    'feat.f4.title': 'Contagem de Passos',
+    'feat.f4.desc': 'Coleta dedicada de passos otimizada para a dinâmica única do beach tennis, sincronizada ao HealthKit.',
+    'feat.f5.title': 'Duração da Sessão',
+    'feat.f5.desc': 'Tempo total de jogo rastreado automaticamente. Cada sessão salva localmente no dispositivo via SwiftData.',
+    'feat.f6.title': 'Histórico Completo',
+    'feat.f6.desc': 'Todas as suas sessões organizadas no iPhone. Acompanhe sua evolução ao longo do tempo com dados persistentes.',
+
+    'ss.h2': 'Desenhado para<br>quem <em>joga de verdade.</em>',
+    'ss.sub': 'Interface limpa, dados no centro. Tudo que você precisa saber sobre sua partida em um olhar.',
+    'ss.tab0': 'Dashboard',
+    'ss.tab1': 'Histórico',
+    'ss.tab2': 'Sessão ao vivo',
+    'ss.greeting': 'Boa tarde, Nikolas',
+    'ss.last_session': 'Última<br>sessão',
+    'ss.max_hr': 'Frequência Cardíaca Máx.',
+    'ss.steps': 'Passos',
+    'ss.avg_hr': 'FC Média',
+    'ss.live_time': 'Ao vivo · 42:18',
+    'ss.end_session': 'Encerrar sessão',
+    'ss.cap0.title': 'Dashboard',
+    'ss.cap0.desc': 'Visão geral da sua última sessão com todas as métricas em um só lugar. Acompanhe sua evolução ao longo do tempo.',
+    'ss.cap1.title': 'Histórico de sessões',
+    'ss.cap1.desc': 'Todas as suas partidas organizadas cronologicamente. Revise cada sessão com calorias, distância e frequência cardíaca.',
+    'ss.cap2.title': 'Sessão ao vivo',
+    'ss.cap2.desc': 'Interface limpa com dados em tempo real durante a partida. FC, calorias e distância atualizados a cada segundo.',
+
+    'ms.max_hr_label': 'FC Máxima · sessão anterior',
+    'ms.max_hr_sub': 'Registrado aos 38 min de partida',
+    'ms.kcal_sub': 'kcal em 68 min',
+    'ms.km_sub': 'km percorridos',
+    'ms.steps_sub': 'na sessão',
+    'ms.dur_sub': 'tempo em quadra',
+    'ms.eyebrow': 'Dados Inteligentes',
+    'ms.h2': 'Cada número<br>conta uma <em>história</em>',
+    'ms.body': 'O Ventaglio captura e organiza suas métricas em cada partida — do aquecimento ao último ponto. Tudo integrado nativamente ao HealthKit, sem configuração extra.',
+    'ms.cta': 'Começar agora',
+
+    'watch.h2': 'Projetado<br>para o <em>seu pulso</em>',
+    'watch.sub': 'Interface nativa para Apple Watch com watchOS 10. Inicie, pause e encerre sua sessão sem tirar os olhos da quadra.',
+    'watch.f1.desc': 'Interface nativa otimizada para a tela do Apple Watch com todas as complicações disponíveis.',
+    'watch.f2.title': 'Sincronização automática',
+    'watch.f2.desc': 'Dados transferidos automaticamente para o iPhone via WatchConnectivity ao aproximar os dispositivos.',
+    'watch.f3.desc': 'Sessões salvas no Watch mesmo sem conexão. Tudo sincronizado quando o iPhone estiver disponível.',
+    'watch.f4.desc': 'Cada sessão é registrada automaticamente no app Saúde do iPhone sem nenhuma ação extra.',
+    'watch.time': 'Tempo',
+
+    'pb.p1.title': 'Dados no seu dispositivo',
+    'pb.p1.sub': 'Métricas de partida nunca saem do iPhone ou Watch',
+    'pb.p2.title': '100% offline após o login',
+    'pb.p2.sub': 'Tracking completo sem internet',
+    'pb.p3.title': 'Sem anúncios, sem rastreamento',
+    'pb.p3.sub': 'Seus dados não são usados para publicidade',
+    'pb.p4.title': 'Integrado ao HealthKit',
+    'pb.p4.sub': 'Partidas salvas no app Saúde automaticamente',
+
+    'faq.eyebrow': 'Perguntas frequentes',
+    'faq.h2': 'Tudo que você<br>precisa <em>saber</em>',
+    'faq.contact_note': 'Não encontrou o que procurava? Nossa equipe responde em até 2 dias úteis.',
+    'faq.q1': 'Minhas métricas não aparecem no iPhone. O que faço?',
+    'faq.a1': 'Abra o aplicativo Ventaglio no iPhone com o Apple Watch por perto. As métricas sincronizam automaticamente quando os dois dispositivos estão conectados. Se você jogou sem o iPhone por perto, os dados ficam salvos localmente no Watch e sincronizam assim que o iPhone voltar ao alcance.',
+    'faq.q2': 'Posso usar o Ventaglio sem internet?',
+    'faq.a2': 'Sim. A única funcionalidade que requer internet é o login inicial. Depois de logado, todo o tracking de partidas funciona totalmente offline. As métricas sincronizam entre Watch e iPhone via Bluetooth local, não pela internet.',
+    'faq.q3': 'Por que o app pede permissões do HealthKit?',
+    'faq.a3': 'O Ventaglio usa o HealthKit para ler sua frequência cardíaca, calorias ativas, passos e distância durante partidas. Também salva partidas no app Saúde como treinos (com sua permissão). Todos os dados de saúde ficam no seu dispositivo — nunca são enviados para servidores externos.',
+    'faq.q4': 'Meus dados vão para algum servidor?',
+    'faq.a4': 'A única informação que sai do seu dispositivo é a autenticação (Login com Google via Firebase). Dados de partida, métricas de saúde e informações de perfil permanecem inteiramente nos seus dispositivos. Consulte a <a href="https://ventaglio.app/privacy-pt" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">Política de Privacidade completa</a> para mais detalhes.',
+    'faq.q5': 'O app do Apple Watch não inicia ou trava. O que faço?',
+    'faq.a5': '<ol><li>Force o fechamento do app no Watch (pressione o botão lateral, deslize o app para cima).</li><li>Verifique se o Watch está com a última versão do watchOS.</li><li>Confirme que o Ventaglio tem permissões de HealthKit e Localização em Ajustes → Privacidade.</li><li>Se persistir, envie email para support@ventaglio.app com o modelo do Watch e versão do watchOS.</li></ol>',
+    'faq.q6': 'Como apago minha conta?',
+    'faq.a6': 'Para apagar dados locais (partidas e perfil), desinstale o app do iPhone e Apple Watch. Para excluir sua conta de autenticação, envie email para <a href="mailto:support@ventaglio.app" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">support@ventaglio.app</a> — excluiremos seu registro em até 30 dias.',
+
+    'about.eyebrow': 'Sobre o app',
+    'about.h2': 'Feito por quem<br>joga <em>beach tennis.</em>',
+    'about.body': 'O Ventaglio é um aplicativo independente desenvolvido por uma única pessoa que joga beach tennis. O objetivo é ajudar jogadores de todos os níveis a acompanharem seu desempenho com ferramentas simples, confiáveis e que respeitam sua privacidade.',
+    'about.privacy_title': 'Privacidade em primeiro lugar',
+
+    'cta.eyebrow': 'Disponível agora',
+    'cta.h2': 'Comece a <em>medir</em><br>sua evolução hoje',
+    'cta.sub': 'Gratuito para iPhone e Apple Watch. Comece sua primeira sessão em minutos.',
+    'cta.available_on': 'Disponível na',
+
+    'footer.privacy': 'Privacidade',
+    'footer.support': 'Suporte',
+    'footer.contact': 'Contato',
+    'footer.privacy_href': 'https://ventaglio.app/privacy-pt',
+    'footer.support_href': 'https://ventaglio.app/support-pt',
+  },
+
+  en: {
+    'nav.how': 'How it works',
+    'nav.features': 'Features',
+    'nav.cta': 'Download',
+
+    'hero.h1': 'Your game,<br>in <em>numbers.</em>',
+    'hero.sub': 'Real-time performance metrics right on your wrist. Heart rate, calories, distance — all synced to HealthKit after every match.',
+
+    'chip.live': 'Live',
+    'chip.calories': 'Calories',
+    'chip.distance': 'Distance',
+
+    'mock.today': 'Today',
+    'mock.hr': 'Heart Rate',
+    'mock.bpm_live': 'bpm · live',
+    'mock.daily_goal': 'Daily goal',
+    'mock.pct_done': '75% complete',
+    'mock.duration': 'Duration',
+
+    'trust.metrics': 'Real-time metrics',
+    'trust.history': 'Session history',
+    'trust.update': 'Live updates',
+    'trust.native': 'Native · watchOS 10',
+
+    'hiw.h2': 'Three steps to <em>get started</em>',
+    'hiw.s1.title': 'Open on Apple Watch',
+    'hiw.s1.desc': 'With Ventaglio installed, open the app directly on your Watch before stepping onto the court.',
+    'hiw.s2.title': 'Start your session',
+    'hiw.s2.desc': 'Tap Start. The app immediately begins capturing heart rate, calories, and distance.',
+    'hiw.s3.title': 'Review on iPhone',
+    'hiw.s3.desc': 'When you finish, all data syncs to your iPhone and saves to HealthKit automatically.',
+
+    'feat.h2': 'Everything you need<br>to <em>improve</em>',
+    'feat.note': 'Every metric was designed specifically for beach tennis — captured precisely and delivered in real time on your wrist.',
+    'feat.f1.title': 'Heart Rate',
+    'feat.f1.desc': 'Continuous monitoring via HealthKit. Track your training zone in real time and recovery between points.',
+    'feat.f2.title': 'Active Calories',
+    'feat.f2.desc': 'Precise calorie burn calculation based on your HealthKit data, updated every second of the match.',
+    'feat.f3.title': 'Distance',
+    'feat.f3.desc': 'Know exactly how many meters you cover per match. Speed-filtered data for maximum court accuracy.',
+    'feat.f4.title': 'Step Count',
+    'feat.f4.desc': 'Dedicated step tracking optimized for the unique dynamics of beach tennis, synced to HealthKit.',
+    'feat.f5.title': 'Session Duration',
+    'feat.f5.desc': 'Total play time tracked automatically. Each session saved locally on device via SwiftData.',
+    'feat.f6.title': 'Full History',
+    'feat.f6.desc': 'All your sessions organized on iPhone. Track your progress over time with persistent data.',
+
+    'ss.h2': 'Designed for<br>those who <em>really play.</em>',
+    'ss.sub': 'Clean interface, data front and center. Everything you need to know about your match at a glance.',
+    'ss.tab0': 'Dashboard',
+    'ss.tab1': 'History',
+    'ss.tab2': 'Live Session',
+    'ss.greeting': 'Good afternoon, Nikolas',
+    'ss.last_session': 'Last<br>session',
+    'ss.max_hr': 'Max Heart Rate',
+    'ss.steps': 'Steps',
+    'ss.avg_hr': 'Avg HR',
+    'ss.live_time': 'Live · 42:18',
+    'ss.end_session': 'End session',
+    'ss.cap0.title': 'Dashboard',
+    'ss.cap0.desc': 'Overview of your last session with all metrics in one place. Track your progress over time.',
+    'ss.cap1.title': 'Session history',
+    'ss.cap1.desc': 'All your matches organized chronologically. Review each session's calories, distance, and heart rate.',
+    'ss.cap2.title': 'Live session',
+    'ss.cap2.desc': 'Clean interface with real-time data during the match. HR, calories, and distance updated every second.',
+
+    'ms.max_hr_label': 'Max HR · previous session',
+    'ms.max_hr_sub': 'Recorded at 38 min into the match',
+    'ms.kcal_sub': 'kcal in 68 min',
+    'ms.km_sub': 'km traveled',
+    'ms.steps_sub': 'in session',
+    'ms.dur_sub': 'time on court',
+    'ms.eyebrow': 'Smart Data',
+    'ms.h2': 'Every number<br>tells a <em>story</em>',
+    'ms.body': 'Ventaglio captures and organizes your metrics across every match — from warm-up to the final point. All natively integrated with HealthKit, zero extra setup.',
+    'ms.cta': 'Get started',
+
+    'watch.h2': 'Designed<br>for <em>your wrist</em>',
+    'watch.sub': 'Native Apple Watch interface built for watchOS 10. Start, pause, and end your session without taking your eyes off the court.',
+    'watch.f1.desc': 'Native interface optimized for the Apple Watch screen with all complications available.',
+    'watch.f2.title': 'Auto sync',
+    'watch.f2.desc': 'Data transferred automatically to iPhone via WatchConnectivity when the devices are nearby.',
+    'watch.f3.desc': 'Sessions saved on Watch even without a connection. Everything synced when iPhone is available.',
+    'watch.f4.desc': 'Each session is automatically logged in the iPhone Health app with no extra action required.',
+    'watch.time': 'Time',
+
+    'pb.p1.title': 'Data on your device',
+    'pb.p1.sub': 'Match metrics never leave your iPhone or Watch',
+    'pb.p2.title': '100% offline after login',
+    'pb.p2.sub': 'Full tracking with no internet needed',
+    'pb.p3.title': 'No ads, no tracking',
+    'pb.p3.sub': 'Your data is never used for advertising',
+    'pb.p4.title': 'HealthKit integrated',
+    'pb.p4.sub': 'Matches saved to the Health app automatically',
+
+    'faq.eyebrow': 'Frequently asked questions',
+    'faq.h2': 'Everything you<br>need to <em>know</em>',
+    'faq.contact_note': 'Didn\'t find what you were looking for? Our team responds within 2 business days.',
+    'faq.q1': 'My metrics aren\'t showing on iPhone. What do I do?',
+    'faq.a1': 'Open the Ventaglio app on your iPhone with your Apple Watch nearby. Metrics sync automatically when both devices are connected. If you played without your iPhone nearby, the data is saved locally on the Watch and syncs as soon as the iPhone is in range.',
+    'faq.q2': 'Can I use Ventaglio without internet?',
+    'faq.a2': 'Yes. The only feature that requires internet is the initial login. Once logged in, all match tracking works fully offline. Metrics sync between Watch and iPhone via local Bluetooth, not the internet.',
+    'faq.q3': 'Why does the app ask for HealthKit permissions?',
+    'faq.a3': 'Ventaglio uses HealthKit to read your heart rate, active calories, steps, and distance during matches. It also saves matches to the Health app as workouts (with your permission). All health data stays on your device — it is never sent to external servers.',
+    'faq.q4': 'Does my data go to any server?',
+    'faq.a4': 'The only information that leaves your device is authentication (Google Sign-In via Firebase). Match data, health metrics, and profile information remain entirely on your devices. See the <a href="https://ventaglio.app/privacy" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">full Privacy Policy</a> for details.',
+    'faq.q5': 'The Apple Watch app won\'t start or crashes. What do I do?',
+    'faq.a5': '<ol><li>Force-close the app on the Watch (press the side button, swipe the app up).</li><li>Check that the Watch is running the latest version of watchOS.</li><li>Confirm Ventaglio has HealthKit and Location permissions in Settings → Privacy.</li><li>If the issue persists, email support@ventaglio.app with your Watch model and watchOS version.</li></ol>',
+    'faq.q6': 'How do I delete my account?',
+    'faq.a6': 'To delete local data (matches and profile), uninstall the app from your iPhone and Apple Watch. To delete your authentication account, email <a href="mailto:support@ventaglio.app" style="color:var(--sand-600);border-bottom:1px solid var(--sand-300);">support@ventaglio.app</a> — we will delete your record within 30 days.',
+
+    'about.eyebrow': 'About the app',
+    'about.h2': 'Built by someone who<br><em>plays beach tennis.</em>',
+    'about.body': 'Ventaglio is an independent app built by a single developer who plays beach tennis. The goal is to help players of all levels track their performance with tools that are simple, reliable, and privacy-respecting.',
+    'about.privacy_title': 'Privacy first',
+
+    'cta.eyebrow': 'Available now',
+    'cta.h2': 'Start <em>measuring</em><br>your progress today',
+    'cta.sub': 'Free for iPhone and Apple Watch. Start your first session in minutes.',
+    'cta.available_on': 'Available on the',
+
+    'footer.privacy': 'Privacy',
+    'footer.support': 'Support',
+    'footer.contact': 'Contact',
+    'footer.privacy_href': 'https://ventaglio.app/privacy',
+    'footer.support_href': 'https://ventaglio.app/support',
+  }
+};
+
+/* ═══════════════════════════════════════
+   i18n — apply language
+═══════════════════════════════════════ */
+function applyLang(lang) {
+  const d = T[lang];
+
+  // Update html lang attr
+  document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+  // Update all data-i18n (textContent)
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (d[key] !== undefined) el.textContent = d[key];
+  });
+
+  // Update all data-i18n-html (innerHTML)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (d[key] !== undefined) el.innerHTML = d[key];
+  });
+
+  // Update footer links
+  const fprivacy = document.getElementById('footer-privacy');
+  const fsupport = document.getElementById('footer-support');
+  if (fprivacy) fprivacy.href = d['footer.privacy_href'];
+  if (fsupport) fsupport.href = d['footer.support_href'];
+
+  // Update screenshot captions (driven by activeTab index)
+  const activeTabIdx = parseInt(document.querySelector('.ss-tab.active')?.dataset.screen || '0');
+  const capTitle = document.getElementById('ss-caption-title');
+  const capDesc = document.getElementById('ss-caption-desc');
+  if (capTitle) capTitle.textContent = d[`ss.cap${activeTabIdx}.title`];
+  if (capDesc) capDesc.textContent = d[`ss.cap${activeTabIdx}.desc`];
+
+  // Persist
+  localStorage.setItem('ventaglio_lang', lang);
+
+  // Update flag buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+/* ═══════════════════════════════════════
+   Nav scroll
+═══════════════════════════════════════ */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 });
 
-/* ─── Scroll reveal ─── */
+/* ═══════════════════════════════════════
+   Scroll reveal
+═══════════════════════════════════════ */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -3074,7 +3419,9 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-/* ─── FAQ accordion ─── */
+/* ═══════════════════════════════════════
+   FAQ accordion
+═══════════════════════════════════════ */
 document.querySelectorAll('.faq-question').forEach(btn => {
   btn.addEventListener('click', () => {
     const item = btn.closest('.faq-item');
@@ -3084,28 +3431,16 @@ document.querySelectorAll('.faq-question').forEach(btn => {
   });
 });
 
-/* ─── Screenshot tabs ─── */
-const captions = [
-  {
-    title: 'Dashboard',
-    desc: 'Visão geral da sua última sessão com todas as métricas em um só lugar. Acompanhe sua evolução ao longo do tempo.'
-  },
-  {
-    title: 'Histórico de sessões',
-    desc: 'Todas as suas partidas organizadas cronologicamente. Revise cada sessão com calorias, distância e frequência cardíaca.'
-  },
-  {
-    title: 'Sessão ao vivo',
-    desc: 'Interface limpa com dados em tempo real durante a partida. FC, calorias e distância atualizados a cada segundo.'
-  }
-];
-
+/* ═══════════════════════════════════════
+   Screenshot tabs
+═══════════════════════════════════════ */
 const tabs = document.querySelectorAll('.ss-tab');
 const phones = document.querySelectorAll('.ss-phone');
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     const idx = parseInt(tab.dataset.screen);
+    const lang = localStorage.getItem('ventaglio_lang') || 'pt';
 
     tabs.forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
@@ -3122,10 +3457,30 @@ tabs.forEach(tab => {
       }
     });
 
-    document.getElementById('ss-caption-title').textContent = captions[idx].title;
-    document.getElementById('ss-caption-desc').textContent = captions[idx].desc;
+    document.getElementById('ss-caption-title').textContent = T[lang][`ss.cap${idx}.title`];
+    document.getElementById('ss-caption-desc').textContent = T[lang][`ss.cap${idx}.desc`];
   });
 });
+
+/* ═══════════════════════════════════════
+   Language switcher
+═══════════════════════════════════════ */
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+/* ═══════════════════════════════════════
+   Init — apply saved or browser language
+═══════════════════════════════════════ */
+(function() {
+  const saved = localStorage.getItem('ventaglio_lang');
+  if (saved && T[saved]) {
+    applyLang(saved);
+  } else {
+    const browserLang = navigator.language || navigator.userLanguage || 'pt';
+    applyLang(browserLang.startsWith('pt') ? 'pt' : 'en');
+  }
+})();
 </script>
 </body>
 </html>
