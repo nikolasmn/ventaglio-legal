@@ -19,6 +19,10 @@ We aim to respond within 2 business days.
 
 ## Frequently asked questions
 
+### What do I need to use Ventaglio?
+
+An iPhone with iOS 17 or later, paired with an Apple Watch with watchOS 10 or later. Match metrics are recorded on the Apple Watch. To sign in, use your Google account or Sign in with Apple.
+
 ### Why are my metrics not appearing on the iPhone?
 
 Open the Ventaglio app on your iPhone while your Apple Watch is nearby. Metrics sync automatically once both devices are connected. If you played without your iPhone nearby, the metrics are saved locally on the Watch and will sync once your iPhone is back in range.
@@ -37,17 +41,17 @@ Yes. The only feature that requires internet is the initial login. After signing
 
 ### Does my data go to any server?
 
-The only data that leaves your device is your authentication (Google Sign-In). Match data, profile information, and health metrics stay on your devices. See our [Privacy Policy](./privacy) for details.
+Your match, health and profile data stay on your devices. The only data that leaves them is your sign-in (Google or Apple, through Firebase Authentication), a few anonymous usage events, and crash reports that help us fix bugs and never include health data. See our [Privacy Policy](./privacy) for details.
 
 ### How do I delete my account?
 
-Email us at [support@ventaglio.app](mailto:support@ventaglio.app) requesting account deletion. We will delete your authentication record within 30 days. To delete all local data, uninstall the app from your iPhone and Apple Watch.
+In the app, go to Settings → Delete Account. Your account is deleted right away, together with your profile and match history on the iPhone, permanently. Workouts saved to Apple Health stay there, under your control. If you can't access the app, email [support@ventaglio.app](mailto:support@ventaglio.app) and we'll delete it for you.
 
 ### My Apple Watch session is not starting / crashes / behaves unexpectedly. What do I do?
 
 1. Force-quit the Ventaglio app on the Watch (press the side button, then swipe up on the app)
 2. Make sure your Watch has the latest watchOS version
-3. Make sure Ventaglio has HealthKit and Location permissions enabled in iPhone Settings → Privacy
+3. Make sure Ventaglio has HealthKit and Location permissions enabled on your iPhone, in Settings → Privacy & Security → Health and Location Services
 4. If the issue persists, please email us at [support@ventaglio.app](mailto:support@ventaglio.app) with details about your Watch model and watchOS version
 
 ## About Ventaglio

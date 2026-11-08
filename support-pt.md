@@ -19,6 +19,10 @@ Respondemos em até 2 dias úteis.
 
 ## Perguntas frequentes
 
+### Do que eu preciso para usar o Ventaglio?
+
+Um iPhone com iOS 17 ou mais recente, pareado com um Apple Watch com watchOS 10 ou mais recente. As métricas da partida são registradas no Apple Watch. Para entrar, use sua conta Google ou o Sign in with Apple.
+
 ### Minhas métricas não aparecem no iPhone, e agora?
 
 Abra o aplicativo Ventaglio no iPhone com o Apple Watch por perto. As métricas sincronizam automaticamente quando os dois dispositivos estão conectados. Se você jogou sem o iPhone por perto, as métricas ficam salvas localmente no Watch e sincronizam assim que o iPhone voltar ao alcance.
@@ -37,17 +41,17 @@ Sim. A única funcionalidade que requer internet é o login inicial. Depois de l
 
 ### Meus dados vão para algum servidor?
 
-A única informação que sai do seu dispositivo é a autenticação (Login com Google). Dados de partida, informações de perfil e métricas de saúde permanecem nos seus dispositivos. Veja nossa [Política de Privacidade](./privacy-pt) para detalhes.
+Seus dados de partida, de saúde e de perfil ficam nos seus dispositivos. Saem apenas os dados de login (Google ou Apple, via Firebase Authentication), alguns eventos de uso anônimos e relatórios de falha, que nos ajudam a corrigir erros e nunca incluem dados de saúde. Veja nossa [Política de Privacidade](./privacy-pt) para detalhes.
 
 ### Como apago minha conta?
 
-Envie email para [support@ventaglio.app](mailto:support@ventaglio.app) solicitando a exclusão da conta. Apagaremos seu registro de autenticação em até 30 dias. Para apagar todos os dados locais, desinstale o aplicativo do seu iPhone e Apple Watch.
+No app, vá em Settings → Delete Account. Sua conta é excluída na hora, junto com seu perfil e seu histórico de partidas no iPhone, de forma permanente. Treinos salvos no app Saúde continuam lá, sob seu controle. Se não conseguir acessar o app, escreva para [support@ventaglio.app](mailto:support@ventaglio.app) que fazemos a exclusão por você.
 
 ### O app do Apple Watch não inicia, trava, ou se comporta de forma estranha. O que faço?
 
 1. Force o fechamento do app Ventaglio no Watch (pressione o botão lateral, depois deslize o app pra cima)
 2. Verifique se o Watch está com a última versão do watchOS
-3. Verifique se o Ventaglio tem permissões do HealthKit e Localização habilitadas em Ajustes do iPhone → Privacidade
+3. Verifique se o Ventaglio tem permissões do HealthKit e Localização habilitadas no iPhone, em Ajustes → Privacidade e Segurança → Saúde e Serviços de Localização
 4. Se o problema persistir, envie email para [support@ventaglio.app](mailto:support@ventaglio.app) com detalhes sobre o modelo do seu Watch e a versão do watchOS
 
 ## Sobre o Ventaglio

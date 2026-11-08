@@ -5,155 +5,103 @@ title: Privacy Policy
 
 # Privacy Policy
 
-**Effective date:** [LAUNCH DATE]
-**Last updated:** [LAUNCH DATE]
+**Effective date:** November 8, 2026
+**Last updated:** November 8, 2026
 
-This Privacy Policy describes how Ventaglio ("we", "us", or "the app") handles your information. By using Ventaglio, you agree to the terms described here.
+[← Back to home](./) · [Política de Privacidade (Português)](./privacy-pt)
 
-[← Back to home](./)
+Ventaglio is a beach tennis app for iPhone and Apple Watch that records your match metrics. This policy explains what data the app uses, where it stays, and the choices you have.
+
+**In short:** your health and match data stay on your iPhone, your Apple Watch and Apple Health. They are never sent to our servers or to anyone else. We only process the minimum needed to sign you in, count a few anonymous usage events and diagnose crashes.
 
 ## Who we are
 
-Ventaglio is an independent iOS and watchOS app built for beach tennis players to track performance metrics during matches. The app is developed by Nikolas Mesquita do Nascimento as an individual developer.
+Ventaglio is developed by Nikolas Mesquita do Nascimento, an individual developer based in Brazil, who is the controller of the personal data described here. Contact: [support@ventaglio.app](mailto:support@ventaglio.app).
 
-## What information we collect
+## Summary
 
-### Information you provide directly
+| Data | Where it stays | Why |
+|---|---|---|
+| Heart rate, calories, distance, speed, steps, match times | Only on your devices and in Apple Health | To show your match metrics and history |
+| Location during a match | Used on the Apple Watch only while a match is running; not stored | To measure the distance you cover |
+| Profile: display name, skill level, dominant hand | Only on your iPhone | To personalize the app |
+| Email, name from your sign-in provider, account ID | Google Firebase Authentication | To create and secure your account |
+| Anonymous usage events and device information | Google Analytics for Firebase | To understand how the app is used |
+| Crash reports | Google Firebase Crashlytics | To find and fix bugs |
 
-When you sign in to Ventaglio using Google Sign-In, we receive:
+## 1. Data that stays on your devices
 
-- Your **name** (display name from your Google account)
-- Your **email address**
-- A **unique user identifier** (Firebase user ID, used internally to associate your data with your account)
+**Health and fitness data.** With your permission, the Apple Watch app reads heart rate, active energy, step count and walking/running distance from Apple Health during a match, and saves each match to Apple Health as a workout. The resulting session (start and end time, heart rate statistics, calories, distance, speed and steps) is sent from your Apple Watch to your iPhone over Apple's WatchConnectivity and stored only in the app's local database on your iPhone.
 
-When you complete the onboarding screen, you also provide:
+**Location.** With your permission, the Apple Watch app uses your location while a match is running, to measure the distance you cover on outdoor courts. Location is requested as "While Using the App". Locations are used only to calculate distance and are not stored or sent anywhere. Only the resulting distance is kept with the session.
 
-- Your **player skill level** (beginner, intermediate, or advanced)
-- Your **dominant hand** (right or left)
+**Profile.** The display name, skill level and dominant hand you enter during onboarding are stored only on your iPhone.
 
-This profile information is stored **only on your device** and is not transmitted to any server.
+We do not have access to any of this data. Health data is never used for advertising or marketing, never sold, and never shared with third parties.
 
-### Information collected automatically during use
+## 2. Data processed by our service provider
 
-During an active beach tennis session on your Apple Watch, the app collects:
+Ventaglio uses Google Firebase, provided by Google LLC, for the following purposes. Google processes this data on our behalf.
 
-- **Heart rate** (via HealthKit)
-- **Active energy burned** (via HealthKit)
-- **Step count** (via HealthKit)
-- **Distance traveled** (via HealthKit and Core Location / GPS)
-- **Precise location** (only while you are actively using the app, to measure distance covered on outdoor courts)
+### Sign-in (Firebase Authentication)
 
-This data is collected only while you have an active workout session running.
+When you sign in with Google or with Apple, Firebase receives your email address, the name provided by your sign-in provider, and a unique account identifier. If you use Sign in with Apple and choose to hide your email, we only receive Apple's private relay address.
 
-## How we use your information
+### Analytics (Google Analytics for Firebase)
 
-Your information is used solely to provide the app's core functionality:
+The app records a small set of events: completing sign-in (and whether it was with Google or Apple), deleting your account, and syncing a match from the Apple Watch. Google Analytics also collects standard information such as device model, operating system version, app version, an app instance identifier and an approximate location (country or city) derived from your IP address. These events are not linked to your name or email and never include health data.
 
-- Display your match metrics in real time on the Apple Watch
-- Save your match history on your iPhone for later review
-- Save matches to the iOS Health app as workouts (if you grant permission)
-- Authenticate you across sessions and devices
+### Crash reports (Firebase Crashlytics)
 
-We do **not** use your information for:
-
-- Advertising
-- Tracking across other apps or websites
-- Profiling or behavioral analytics
-- Marketing communications
-
-## Where your information is stored
-
-| Data | Location |
-|---|---|
-| Profile (name, skill level, dominant hand) | On your device (SwiftData, local) |
-| Match metrics (heart rate, calories, steps, distance) | On your device (SwiftData, local) |
-| Authentication credentials (Google account, user ID) | Firebase Authentication servers (Google Cloud) |
-| Health data (if you save matches as workouts) | iOS Health app on your device |
-
-**Match data is never transmitted to our servers or third parties.** It exists only on your iPhone and Apple Watch, and is synchronized between them via Apple's WatchConnectivity framework.
-
-The only data that leaves your device is your Google authentication, which goes directly to Firebase Authentication (operated by Google) for the sole purpose of verifying your identity.
-
-## Third-party services
-
-Ventaglio uses the following third-party services:
-
-### Google Sign-In and Firebase Authentication
-
-We use Google Sign-In to authenticate users. When you sign in:
-
-- Google handles the authentication
-- Firebase Authentication (Google Cloud) stores your authentication credentials
-- We receive your name, email, and a user ID from this process
+If the app crashes or hits certain errors, Crashlytics receives a technical report with the error details, device model, operating system version, app version and an installation identifier. Crash reports never include health data.
 
 Google's privacy policy: [https://policies.google.com/privacy](https://policies.google.com/privacy)
 Firebase privacy: [https://firebase.google.com/support/privacy](https://firebase.google.com/support/privacy)
+Apple's privacy policy (Apple Health, Sign in with Apple, Core Location): [https://www.apple.com/legal/privacy/](https://www.apple.com/legal/privacy/)
 
-### Apple HealthKit and Core Location
+## 3. What we do not do
 
-These are Apple system services. Data accessed via HealthKit and Core Location is governed by Apple's privacy policies and remains under your control through iOS Settings.
+- We do not sell your data.
+- We do not show ads, and we do not track you across other companies' apps or websites.
+- We do not upload your health, fitness or location data to any server.
 
-Apple's privacy policy: [https://www.apple.com/legal/privacy/](https://www.apple.com/legal/privacy/)
+## 4. Legal bases
 
-## Your rights
+Where data protection laws such as Brazil's LGPD (Lei Geral de Proteção de Dados) or the EU's GDPR apply, we process your data based on: the performance of our service when you create and use an account; our legitimate interest in keeping the app stable and understanding how it is used, for analytics and crash reports; and your consent for access to Apple Health and location, which you give and can withdraw through iOS permissions.
 
-Depending on your jurisdiction, you may have the following rights:
+## 5. How long we keep data
 
-### Under GDPR (European Union)
+- Account data is kept until you delete your account.
+- Data on your devices is kept until you delete it, delete your account, or uninstall the app. Workouts saved to Apple Health remain in Apple Health, where you control them.
+- Crash reports are kept by Crashlytics for up to 90 days. Analytics data is kept for the retention period configured in Google Analytics and then deleted.
 
-- Right to access your data
-- Right to correct inaccurate data
-- Right to delete your data ("right to be forgotten")
-- Right to data portability
-- Right to object to processing
-- Right to lodge a complaint with a supervisory authority
+## 6. International transfers
 
-### Under LGPD (Brazil)
+Google may process the data described in section 2 on servers outside your country, including in the United States, under its own safeguards for international data transfers.
 
-- Right to confirm data processing
-- Right to access your data
-- Right to correct incomplete or inaccurate data
-- Right to anonymize, block, or delete unnecessary data
-- Right to data portability
-- Right to delete data processed with your consent
-- Right to information about data sharing
-- Right to revoke consent
+## 7. Your rights and choices
 
-### How to exercise your rights
+**Delete your account in the app.** Go to Settings → Delete Account. This permanently deletes your Firebase account and removes your profile and match history from your iPhone. Workouts already saved in Apple Health stay there; you can delete them in the Health app.
 
-To exercise any of these rights, contact us at [support@ventaglio.app](mailto:support@ventaglio.app).
+**Permissions.** You can turn off access to Apple Health and location at any time in your iPhone and Apple Watch settings. Some metrics will no longer be recorded.
 
-### Deleting your data
+**Other requests.** Depending on where you live, you may have the right to confirm whether we process your data, access it, correct it, delete it, receive a copy, object to processing, learn who we share it with, and withdraw consent. To make a request, email [support@ventaglio.app](mailto:support@ventaglio.app). You may also contact your local data protection authority; in Brazil, the ANPD.
 
-- **Match data and profile:** uninstall the app from your iPhone and Apple Watch. All local data is permanently deleted.
-- **Authentication account:** email us at [support@ventaglio.app](mailto:support@ventaglio.app) requesting account deletion. We will delete your Firebase Authentication record within 30 days.
+## 8. Security
 
-## Data retention
+Communication with Firebase is encrypted with HTTPS/TLS. Data on your devices is protected by iOS data protection and your device passcode. We never see or store your Google or Apple password.
 
-- **Local data (profile, matches):** retained on your device until you delete the app or manually delete entries.
-- **Authentication data:** retained on Firebase until you request account deletion.
+## 9. Children
 
-## Children's privacy
+Ventaglio is not directed at children under 13, and we do not knowingly collect personal data from them. If you believe a child has provided us with personal data, contact [support@ventaglio.app](mailto:support@ventaglio.app).
 
-Ventaglio is not directed to children under 13. We do not knowingly collect data from children under 13. If you become aware that a child has provided us with personal information, please contact [support@ventaglio.app](mailto:support@ventaglio.app).
+## 10. Changes to this policy
 
-## Security
+If we change this policy, we will update the date at the top of this page. For significant changes, we will also let you know in the app or in the App Store release notes.
 
-We use industry-standard security practices:
+## 11. Contact
 
-- All communication with Firebase Authentication is encrypted via HTTPS/TLS
-- Local data is protected by iOS data protection and your device passcode
-- We do not store passwords (authentication is handled by Google)
-
-## Changes to this policy
-
-We may update this Privacy Policy. The "Last updated" date at the top reflects the most recent revision. Material changes will be communicated through the app.
-
-## Contact
-
-Questions or requests regarding this Privacy Policy:
-
-**Email:** [support@ventaglio.app](mailto:support@ventaglio.app)
+Nikolas Mesquita do Nascimento — [support@ventaglio.app](mailto:support@ventaglio.app)
 
 ---
 
