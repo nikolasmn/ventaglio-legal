@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% assign pt = false %}{% if page.url contains '-pt' %}{% assign pt = true %}{% endif %}
+<html lang="{% if pt %}pt-BR{% else %}en{% endif %}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ page.title }} · Ventaglio</title>
+<meta name="theme-color" content="#FAFAF6">
+<link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="48x48">
+<link rel="icon" href="{{ '/favicon.png' | relative_url }}" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | relative_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link href="{{ '/assets/sketch.css' | relative_url }}" rel="stylesheet">
+</head>
+<body>
+<header class="nav scrolled">
+  <div class="wrap nav-inner">
+    <a href="{{ '/' | relative_url }}" class="logo">Ventaglio</a>
+    <div class="nav-right">
+      {% if pt %}
+      <a href="{{ '/privacy-pt' | relative_url }}" class="btn btn-small">Privacidade</a>
+      <a href="{{ '/support-pt' | relative_url }}" class="btn btn-small">Suporte</a>
+      {% else %}
+      <a href="{{ '/privacy' | relative_url }}" class="btn btn-small">Privacy</a>
+      <a href="{{ '/support' | relative_url }}" class="btn btn-small">Support</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+<main class="doc">
+{{ content }}
+</main>
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <a href="{{ '/' | relative_url }}" class="logo">Ventaglio</a>
+    <ul class="footer-links">
+      <li><a href="mailto:support@ventaglio.app">support@ventaglio.app</a></li>
+    </ul>
+    <span class="footer-copy">© 2026 Ventaglio · Nikolas Mesquita do Nascimento</span>
+  </div>
+</footer>
+</body>
+</html>
